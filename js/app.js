@@ -219,18 +219,17 @@ function createDayElement(day, isOtherMonth) {
 function addScale(e) {
   e.preventDefault();
 
-  const data = document.getElementById('agendaData').value;
+  const dataInput = document.getElementById('agendaData').value;
   const tipo = document.getElementById('agendaTipo').value;
   const membro = document.getElementById('agendaMembro').value;
 
-  if (!data || !tipo || !membro) {
+  if (!dataInput || !tipo || !membro) {
     alert('Preencha todos os campos!');
     return;
   }
 
-  // Converter dd/mm/aaaa para yyyy-mm-dd
-  const [day, month, year] = data.split('/');
-  const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  // Converter data de YYYY-MM-DD para formato interno
+  const dateKey = dataInput; // Já está em YYYY-MM-DD
 
   if (!scales[dateKey]) {
     scales[dateKey] = [];
@@ -239,10 +238,9 @@ function addScale(e) {
   scales[dateKey].push(membro);
 
   document.getElementById('agendaForm').reset();
-  selectedDate = null;
   renderCalendar();
 
-  alert('Escala adicionada com sucesso!');
+  alert('✅ Escala adicionada com sucesso!');
 }
 
 // ===== ADICIONAR MEMBRO DA EQUIPE =====
