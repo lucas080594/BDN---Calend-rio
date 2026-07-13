@@ -434,7 +434,7 @@ header p {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
-  color: #e0e0e0;
+  color: #000000;
   font-size: 12px;
   font-family: inherit;
   transition: all 0.3s ease;
