@@ -1,369 +1,551 @@
 <!DOCTYPE html>
+
 <html lang="pt-br">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard Áudio - Bola de Neve Sorocaba</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
     <style>
+
     body {
+
         font-family: 'Inter', sans-serif;
+
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
         color: #f8fafc;
+
         min-height: 100vh;
+
     }
+
     .glass-card {
+
         background: rgba(255, 255, 255, 0.05);
+
         backdrop-filter: blur(12px);
+
         border: 1px solid rgba(255, 255, 255, 0.1);
+
         border-radius: 16px;
+
         height: 100%;
+
     }
 
     .fc { font-size: 0.85rem; }
+
     .fc .fc-col-header-cell-cushion { color: black !important; font-weight: 600; }
+
     .fc .fc-daygrid-day-number { color: #e5e7eb !important; font-weight: 600; }
+
     .fc .fc-event-main { color: #f9fafb !important; }
+
     .fc-toolbar-title { color: #fbbf24 !important; font-size: 1.1rem !important; font-weight: 800; }
+
     .fc-button-primary { background-color: rgba(255,255,255,0.1) !important; border: none !important; color: #e5e7eb !important; }
+
     .fc-event { border-radius: 4px !important; padding: 2px !important; border: none !important; }
+
     .fc-event-title { white-space: normal !important; line-height: 1.1; }
+
     
-    input, select { 
-        background: rgba(0,0,0,0.3) !important; 
-        color: white !important; 
-        border: 1px solid rgba(255,255,255,0.1) !important; 
+
+    input, select {
+
+        background: rgba(0,0,0,0.3) !important;
+
+        color: white !important;
+
+        border: 1px solid rgba(255,255,255,0.1) !important;
+
         padding: 8px;
+
         border-radius: 8px;
+
         width: 100%;
+
         outline: none;
+
     }
+
     input:focus { border-color: #fbbf24 !important; }
+
     option { background: #1e293b; color: white; }
 
     .custom-scroll::-webkit-scrollbar { width: 6px; }
+
     .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+
     .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-    
+
     .modal-hidden { display: none !important; }
-</style>
+
+    </style>
 
 </head>
+
 <body class="p-4 md:p-6">
 
     <header class="max-w-[1600px] mx-auto mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+
         <div class="text-center md:text-left">
+
             <h1 class="text-2xl md:text-3xl font-black italic text-yellow-500 tracking-tighter uppercase leading-none">Ministério de Áudio</h1>
+
             <p class="text-[10px] tracking-[0.4em] text-gray-400 uppercase">Bola de Neve Sorocaba</p>
+
         </div>
+
         <div class="flex items-center gap-4 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+
             <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+
             <span class="text-xs font-bold uppercase tracking-widest text-gray-300">Painel de Controle Ativo</span>
+
         </div>
+
     </header>
 
     <main class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- COLUNA ESQUERDA: CALENDÁRIO + ESTATÍSTICAS -->
+
         <div class="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+
             <div class="glass-card p-4 shadow-2xl">
+
                 <div id="calendar"></div>
+
             </div>
-            
+
             <div class="glass-card p-5">
+
                 <h2 id="tituloStats" class="text-xs font-bold mb-4 text-yellow-500 uppercase tracking-widest flex items-center gap-2">
+
                     Participações no Mês 📊
+
                 </h2>
+
                 <div id="listaStats" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- COLUNA DIREITA: PRÓXIMAS ESCALAS + FORMULÁRIO + EQUIPE -->
         <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6">
-            <!-- PRÓXIMAS ESCALAS -->
+
             <div class="glass-card p-5 flex flex-col h-[400px]">
+
                 <h2 class="text-sm font-bold mb-4 text-yellow-500 uppercase tracking-widest flex justify-between">
+
                     Próximas Escalas <span>📅</span>
+
                 </h2>
+
                 <div id="listaEscalas" class="flex-grow overflow-y-auto custom-scroll space-y-3 pr-2"></div>
+
             </div>
 
-            <!-- AGENDAR CULTO -->
-            <div class="glass-card p-5">
-                <h2 class="text-sm font-bold mb-4 text-blue-400 uppercase tracking-widest">➕ Agendar Culto</h2>
-                <form id="agendaForm" class="space-y-3">
-                    <!-- DATA -->
-                    <div>
-                        <label class="text-[10px] text-gray-400 uppercase mb-2 block font-bold">Data</label>
-                        <input id="dataCulto" type="date" required>
+            <div class="grid grid-cols-1 gap-6">
+
+                <div class="glass-card p-5">
+
+                    <h2 class="text-sm font-bold mb-4 text-blue-400 uppercase tracking-widest">Agendar Culto ➕</h2>
+
+                    <div class="space-y-3">
+
+                        <div class="grid grid-cols-2 gap-2">
+
+                            <input id="dataCulto" type="date">
+
+                            <select id="tipoCulto">
+
+                                <option value="Quinta">Quinta</option>
+
+                                <option value="Domingo Manhã">Dom. Manhã</option>
+
+                                <option value="Domingo Noite">Dom. Noite</option>
+
+                                <option value="Extra">Extra</option>
+
+                            </select>
+
+                        </div>
+
+                        <input id="tituloEscala" type="text" placeholder="Nome da Escala (Ex: Santa Ceia)">
+
+                        <select id="selectMembros"></select>
+
+                        <button id="btnEscala" class="w-full bg-blue-600 py-2 rounded-lg font-black hover:bg-blue-500 transition-all text-sm uppercase">Salvar Escala</button>
+
                     </div>
 
-                    <!-- TIPO DE CULTO -->
-                    <div>
-                        <label class="text-[10px] text-gray-400 uppercase mb-2 block font-bold">Tipo</label>
-                        <select id="tipoCulto" required>
-                            <option value="">Selecionar...</option>
-                            <option value="Domingo Manhã">Domingo Manhã</option>
-                            <option value="Domingo Noite">Domingo Noite</option>
-                            <option value="Extra">Extra</option>
-                        </select>
-                    </div>
-
-                    <!-- MEMBRO -->
-                    <div>
-                        <label class="text-[10px] text-gray-400 uppercase mb-2 block font-bold">Membro</label>
-                        <select id="selectMembros" required>
-                            <option value="">Selecionar...</option>
-                            <option value="VAGO">-- VAGO --</option>
-                        </select>
-                    </div>
-
-                    <!-- TÍTULO (OPCIONAL) -->
-                    <div>
-                        <label class="text-[10px] text-gray-400 uppercase mb-2 block font-bold">Título (Opcional)</label>
-                        <input id="tituloEscala" type="text" placeholder="Ex: Santa Ceia">
-                    </div>
-
-                    <button type="submit" class="w-full bg-blue-600 py-2 rounded-lg font-black hover:bg-blue-500 transition-all text-sm uppercase">Salvar Escala</button>
-                </form>
-            </div>
-
-            <!-- EQUIPE -->
-            <div class="glass-card p-5">
-                <h2 class="text-sm font-bold mb-4 text-green-400 uppercase tracking-widest">👥 Equipe</h2>
-                <div class="flex gap-2 mb-4">
-                    <input id="nomeMembro" type="text" placeholder="Novo integrante" class="text-sm">
-                    <button id="btnMembro" class="bg-green-600 px-4 py-2 rounded-lg font-bold hover:bg-green-500 text-xs whitespace-nowrap">ADD</button>
                 </div>
-                <ul id="listaMembros" class="grid grid-cols-2 gap-2 max-h-[120px] overflow-y-auto custom-scroll pr-2"></ul>
+
+                <div class="glass-card p-5">
+
+                    <h2 class="text-sm font-bold mb-4 text-green-400 uppercase tracking-widest">Equipe 👥</h2>
+
+                    <div class="flex gap-2 mb-4">
+
+                        <input id="nomeMembro" type="text" placeholder="Novo integrante" class="text-sm">
+
+                        <button id="btnMembro" class="bg-green-600 px-4 py-2 rounded-lg font-bold hover:bg-green-500 text-xs">ADD</button>
+
+                    </div>
+
+                    <ul id="listaMembros" class="grid grid-cols-2 gap-2 max-h-[120px] overflow-y-auto custom-scroll pr-2"></ul>
+
+                </div>
+
             </div>
+
         </div>
+
     </main>
 
-    <!-- MODAL EDITAR -->
     <div id="modalEditar" class="modal-hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+
         <div class="glass-card p-6 w-full max-w-sm border-yellow-500/30 h-auto text-center">
+
             <h2 class="text-yellow-500 font-bold mb-4 uppercase tracking-widest text-sm">Alterar Responsável</h2>
+
             <input type="hidden" id="editEscalaId">
+
             <div class="mb-6 text-left">
+
                 <label class="text-[10px] text-gray-400 uppercase mb-2 block">Selecione o Integrante:</label>
+
                 <select id="editSelectMembro"></select>
+
             </div>
+
             <div class="flex gap-2">
-                <button type="button" onclick="window.fecharModal()" class="flex-1 bg-white/10 py-2 rounded-lg font-bold text-xs uppercase hover:bg-white/20">Cancelar</button>
-                <button type="button" id="btnSalvarEdicao" class="flex-1 bg-yellow-500 py-2 rounded-lg font-bold text-xs uppercase text-black hover:bg-yellow-400">Salvar</button>
+
+                <button onclick="window.fecharModal()" class="flex-1 bg-white/10 py-2 rounded-lg font-bold text-xs uppercase hover:bg-white/20">Cancelar</button>
+
+                <button id="btnSalvarEdicao" class="flex-1 bg-yellow-500 py-2 rounded-lg font-bold text-xs uppercase text-black hover:bg-yellow-400">Salvar</button>
+
             </div>
+
         </div>
+
     </div>
 
     <script type="module">
-        // ===== CONFIGURAÇÃO FIREBASE (SEU BANCO) =====
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
+
             apiKey: "AIzaSyC_0RfbPhYfU44zOtwT_8xCviKem25LYgg",
+
             authDomain: "escala-audio.firebaseapp.com",
+
             projectId: "escala-audio",
+
             storageBucket: "escala-audio.firebasestorage.app",
+
             messagingSenderId: "213044166301",
+
             appId: "1:213044166301:web:9569b66b9f46ba958b9e74"
+
         };
 
         const app = initializeApp(firebaseConfig);
+
         const db = getFirestore(app);
+
         let calendar;
+
         let listaNomesGlobal = [];
+
         let todasEscalas = [];
 
-        // ===== ATUALIZAR ESTATÍSTICAS =====
+        // Função para atualizar as estatísticas de contagem
+
         const atualizarEstatisticas = () => {
+
             if (!calendar) return;
+
             const viewDate = calendar.getDate();
+
             const mesAtual = viewDate.getMonth();
+
             const anoAtual = viewDate.getFullYear();
-            
+
             const contagem = {};
+
             listaNomesGlobal.forEach(nome => contagem[nome] = 0);
 
             todasEscalas.forEach(escala => {
+
                 const dataE = new Date(escala.data + "T00:00:00");
+
                 if (dataE.getMonth() === mesAtual && dataE.getFullYear() === anoAtual && escala.responsavel !== "VAGO") {
+
                     contagem[escala.responsavel] = (contagem[escala.responsavel] || 0) + 1;
+
                 }
+
             });
 
             const listaStats = document.getElementById('listaStats');
+
             listaStats.innerHTML = '';
-            
+
+            // Ordena por quem tem mais escalas
+
             Object.entries(contagem)
+
                 .sort((a, b) => b[1] - a[1])
+
                 .forEach(([nome, qtd]) => {
+
                     listaStats.innerHTML += `
+
                         <div class="bg-white/5 border border-white/10 p-2 rounded-lg flex flex-col items-center">
+
                             <span class="text-[10px] font-bold text-gray-400 truncate w-full text-center uppercase">${nome.split(' ')[0]}</span>
+
                             <span class="text-lg font-black text-yellow-500">${qtd}</span>
+
                         </div>
+
                     `;
+
                 });
+
         };
 
-        // ===== INICIALIZAR CALENDÁRIO =====
         document.addEventListener('DOMContentLoaded', () => {
+
             const calendarEl = document.getElementById('calendar');
+
             calendar = new FullCalendar.Calendar(calendarEl, {
+
                 initialView: 'dayGridMonth',
+
                 height: 'auto',
+
                 locale: 'pt-br',
+
                 headerToolbar: { left: 'prev,next', center: 'title', right: 'today' },
-                datesSet: () => atualizarEstatisticas(),
+
+                datesSet: () => atualizarEstatisticas(), // Atualiza quando mudar o mês
+
                 events: []
+
             });
+
             calendar.render();
+
         });
 
-        // ===== CARREGAR MEMBROS =====
         onSnapshot(collection(db, "membros"), (snap) => {
+
             const listaM = document.getElementById('listaMembros');
+
             const selectM = document.getElementById('selectMembros');
-            listaM.innerHTML = '';
-            listaNomesGlobal = [];
-            selectM.innerHTML = '<option value="">Selecionar...</option><option value="VAGO">-- VAGO --</option>';
-            
+
+            listaM.innerHTML = ''; listaNomesGlobal = [];
+
+            selectM.innerHTML = '<option value="">Selecionar Membro...</option><option value="VAGO">-- VAGO --</option>';
+
             snap.forEach(d => {
-                const m = d.data().nome;
-                listaNomesGlobal.push(m);
+
+                const m = d.data().nome; listaNomesGlobal.push(m);
+
                 listaM.innerHTML += `
+
                     <li class="bg-white/5 p-2 rounded-lg flex justify-between items-center border border-white/5">
+
                         <span class="text-[11px] font-semibold truncate mr-2">${m}</span>
-                        <button type="button" onclick="window.removerMembro('${d.id}')" class="text-red-500 hover:text-red-400">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
-                            </svg>
-                        </button>
+
+                        <button onclick="window.removerMembro('${d.id}')" class="text-red-500 hover:text-red-400"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg></button>
+
                     </li>`;
+
                 selectM.innerHTML += `<option value="${m}">${m}</option>`;
+
             });
+
             atualizarEstatisticas();
+
         });
 
-        // ===== CARREGAR ESCALAS =====
         onSnapshot(query(collection(db, "escalas"), orderBy("data", "asc")), (snap) => {
+
             const listaE = document.getElementById('listaEscalas');
+
             listaE.innerHTML = '';
+
             const calendarEvents = [];
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
+
+            const hoje = new Date(); hoje.setHours(0,0,0,0);
+
             todasEscalas = [];
 
             snap.forEach(d => {
+
                 const data = d.data();
+
                 const obj = { id: d.id, ...data };
+
                 todasEscalas.push(obj);
-                
+
                 const dataEscala = new Date(data.data + "T00:00:00");
+
                 const isVago = data.responsavel === "VAGO";
 
                 if (dataEscala >= hoje) {
+
                     const dataF = dataEscala.toLocaleDateString('pt-BR');
+
                     listaE.innerHTML += `
+
                         <div class="bg-white/5 p-3 rounded-xl border-l-4 ${isVago ? 'border-red-500' : 'border-yellow-500'} flex justify-between items-center transition-all hover:bg-white/10">
+
                             <div class="overflow-hidden mr-2">
+
                                 <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">${dataF} • ${data.tipo}</p>
+
                                 <h3 class="text-sm font-black truncate ${isVago ? 'text-red-500' : 'text-white'}">${data.responsavel}</h3>
+
                                 <p class="text-[10px] italic text-gray-500 truncate">${data.titulo || ''}</p>
+
                             </div>
+
                             <div class="flex gap-1 shrink-0">
-                                <button type="button" onclick="window.editarEscala('${d.id}', '${data.responsavel}')" class="bg-yellow-500/20 text-yellow-500 p-1.5 rounded text-[9px] font-bold">EDIT</button>
-                                <button type="button" onclick="window.remover('${d.id}')" class="bg-red-500/20 text-red-500 p-1.5 rounded text-[9px] font-bold uppercase">X</button>
+
+                                <button onclick="window.editarEscala('${d.id}', '${data.responsavel}')" class="bg-yellow-500/20 text-yellow-500 p-1.5 rounded text-[9px] font-bold">EDIT</button>
+
+                                <button onclick="window.remover('${d.id}')" class="bg-red-500/20 text-red-500 p-1.5 rounded text-[9px] font-bold uppercase">X</button>
+
                             </div>
+
                         </div>`;
+
                 }
 
                 calendarEvents.push({
+
                     title: data.titulo ? `${data.responsavel}\n(${data.titulo})` : data.responsavel,
+
                     start: data.data,
+
                     backgroundColor: isVago ? "#ef4444" : "#1e40af",
+
                     borderColor: 'transparent'
+
                 });
+
             });
 
             if (calendar) {
+
                 calendar.removeAllEvents();
+
                 calendar.addEventSource(calendarEvents);
+
             }
+
             atualizarEstatisticas();
+
         });
 
-        // ===== ADICIONAR ESCALA =====
-        document.getElementById('agendaForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Eventos
+
+        document.getElementById('btnEscala').onclick = async () => {
+
             const data = document.getElementById('dataCulto').value;
-            const tipo = document.getElementById('tipoCulto').value;
-            const responsavel = document.getElementById('selectMembros').value || "VAGO";
-            const titulo = document.getElementById('tituloEscala').value;
 
-            if (data && tipo) {
+            if (data) {
+
                 await addDoc(collection(db, "escalas"), {
+
                     data,
-                    tipo,
-                    titulo,
-                    responsavel
+
+                    tipo: document.getElementById('tipoCulto').value,
+
+                    titulo: document.getElementById('tituloEscala').value,
+
+                    responsavel: document.getElementById('selectMembros').value || "VAGO"
+
                 });
-                document.getElementById('agendaForm').reset();
-                alert('✅ Escala adicionada com sucesso!');
-            }
-        });
 
-        // ===== ADICIONAR MEMBRO =====
-        document.getElementById('btnMembro').addEventListener('click', async () => {
-            const n = document.getElementById('nomeMembro').value.trim();
-            if (n) {
-                await addDoc(collection(db, "membros"), { nome: n });
-                document.getElementById('nomeMembro').value = '';
-            }
-        });
+                document.getElementById('tituloEscala').value = "";
 
-        // ===== FUNÇÕES GLOBAIS =====
+                document.getElementById('dataCulto').value = "";
+
+            }
+
+        };
+
+        document.getElementById('btnMembro').onclick = async () => {
+
+            const n = document.getElementById('nomeMembro').value;
+
+            if (n) { await addDoc(collection(db, "membros"), { nome: n }); document.getElementById('nomeMembro').value = ''; }
+
+        };
+
         window.editarEscala = (id, atual) => {
+
             const modal = document.getElementById('modalEditar');
+
             const selectEdit = document.getElementById('editSelectMembro');
+
             document.getElementById('editEscalaId').value = id;
+
             selectEdit.innerHTML = '<option value="VAGO">-- VAGO --</option>';
+
             listaNomesGlobal.forEach(nome => {
+
                 const selected = nome === atual ? 'selected' : '';
+
                 selectEdit.innerHTML += `<option value="${nome}" ${selected}>${nome}</option>`;
+
             });
+
             modal.classList.remove('modal-hidden');
+
         };
 
-        window.fecharModal = () => {
-            document.getElementById('modalEditar').classList.add('modal-hidden');
-        };
+        window.fecharModal = () => document.getElementById('modalEditar').classList.add('modal-hidden');
 
-        document.getElementById('btnSalvarEdicao').addEventListener('click', async () => {
+        document.getElementById('btnSalvarEdicao').onclick = async () => {
+
             const id = document.getElementById('editEscalaId').value;
+
             const novo = document.getElementById('editSelectMembro').value;
+
             await updateDoc(doc(db, "escalas", id), { responsavel: novo });
+
             window.fecharModal();
-        });
 
-        window.remover = async (id) => {
-            if (confirm("Excluir escala?")) {
-                await deleteDoc(doc(db, "escalas", id));
-            }
         };
 
-        window.removerMembro = async (id) => {
-            if (confirm("Excluir membro?")) {
-                await deleteDoc(doc(db, "membros", id));
-            }
-        };
+        window.remover = async (id) => { if(confirm("Excluir escala?")) await deleteDoc(doc(db, "escalas", id)); };
+
+        window.removerMembro = async (id) => { if(confirm("Excluir membro?")) await deleteDoc(doc(db, "membros", id)); };
+
     </script>
+
 </body>
+
 </html>
