@@ -1,6 +1,9 @@
 // ===== VARIÁVEIS GLOBAIS =====
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
+let popupMonth = new Date().getMonth();
+let popupYear = new Date().getFullYear();
+let selectedDate = null;
 let scales = {};
 let teamMembers = ['Lucas', 'Vitor', 'Cauan', 'Carlinhos', 'Clovis'];
 
@@ -8,6 +11,7 @@ let teamMembers = ['Lucas', 'Vitor', 'Cauan', 'Carlinhos', 'Clovis'];
 document.addEventListener('DOMContentLoaded', function() {
   renderCalendar();
   updateTeamSelect();
+  initDatePicker();
   
   document.getElementById('prevMonth').addEventListener('click', () => {
     currentMonth--;
@@ -30,7 +34,121 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('agendaForm').addEventListener('submit', addScale);
 });
 
-// ===== RENDERIZAR CALENDÁRIO =====
+// ===== INICIALIZAR DATE PICKER =====
+function initDatePicker() {
+  const agendaDataInput = document.getElementById('agendaData');
+  const calendarPopup = document.getElementById('calendarPopup');
+
+  agendaDataInput.addEventListener('click', () => {
+    calendarPopup.classList.toggle('active');
+    if (calendarPopup.classList.contains('active')) {
+      renderDatePickerCalendar();
+    }
+  });
+
+  document.getElementById('prevMonthPopup').addEventListener('click', (e) => {
+    e.preventDefault();
+    popupMonth--;
+    if (popupMonth < 0) {
+      popupMonth = 11;
+      popupYear--;
+    }
+    renderDatePickerCalendar();
+  });
+
+  document.getElementById('nextMonthPopup').addEventListener('click', (e) => {
+    e.preventDefault();
+    popupMonth++;
+    if (popupMonth > 11) {
+      popupMonth = 0;
+      popupYear++;
+    }
+    renderDatePickerCalendar();
+  });
+
+  // Fechar ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.date-picker-wrapper')) {
+      calendarPopup.classList.remove('active');
+    }
+  });
+}
+
+// ===== RENDERIZAR CALENDÁRIO DO DATE PICKER =====
+function renderDatePickerCalendar() {
+  const firstDay = new Date(popupYear, popupMonth, 1).getDay();
+  const daysInMonth = new Date(popupYear, popupMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(popupYear, popupMonth, 0).getDate();
+
+  const monthNames = [
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+  ];
+
+  document.getElementById('monthYearPopup').textContent = 
+    `${monthNames[popupMonth]} ${popupYear}`;
+
+  const calendarDays = document.getElementById('calendarDaysPopup');
+  calendarDays.innerHTML = '';
+
+  // Dias do mês anterior
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const day = daysInPrevMonth - i;
+    const dayElement = createDatePickerDay(day, true);
+    calendarDays.appendChild(dayElement);
+  }
+
+  // Dias do mês atual
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayElement = createDatePickerDay(day, false);
+    calendarDays.appendChild(dayElement);
+  }
+
+  // Dias do próximo mês
+  const totalCells = calendarDays.children.length;
+  const remainingCells = 42 - totalCells;
+  for (let day = 1; day <= remainingCells; day++) {
+    const dayElement = createDatePickerDay(day, true);
+    calendarDays.appendChild(dayElement);
+  }
+}
+
+// ===== CRIAR ELEMENTO DO DIA (DATE PICKER) =====
+function createDatePickerDay(day, isOtherMonth) {
+  const dayElement = document.createElement('div');
+  dayElement.className = `calendar-day-popup ${isOtherMonth ? 'other-month' : ''}`;
+  dayElement.textContent = day;
+
+  // Marcar hoje
+  const today = new Date();
+  if (!isOtherMonth && 
+      day === today.getDate() && 
+      popupMonth === today.getMonth() && 
+      popupYear === today.getFullYear()) {
+    dayElement.classList.add('today');
+  }
+
+  // Marcar data selecionada
+  if (selectedDate) {
+    const [selDay, selMonth, selYear] = selectedDate.split('/').map(Number);
+    if (day === selDay && popupMonth === selMonth - 1 && popupYear === selYear) {
+      dayElement.classList.add('selected');
+    }
+  }
+
+  if (!isOtherMonth) {
+    dayElement.addEventListener('click', () => {
+      selectedDate = `${String(day).padStart(2, '0')}/${String(popupMonth + 1).padStart(2, '0')}/${popupYear}`;
+      document.getElementById('agendaData').value = selectedDate;
+      document.getElementById('calendarPopup').classList.remove('active');
+      renderDatePickerCalendar(); // Atualizar seleção visual
+    });
+  }
+
+  return dayElement;
+}
+
+// ===== RENDERIZAR CALENDÁRIO PRINCIPAL =====
 function renderCalendar() {
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -68,7 +186,7 @@ function renderCalendar() {
   }
 }
 
-// ===== CRIAR ELEMENTO DO DIA =====
+// ===== CRIAR ELEMENTO DO DIA (CALENDÁRIO PRINCIPAL) =====
 function createDayElement(day, isOtherMonth) {
   const dayElement = document.createElement('div');
   dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''}`;
@@ -110,13 +228,18 @@ function addScale(e) {
     return;
   }
 
-  if (!scales[data]) {
-    scales[data] = [];
+  // Converter dd/mm/aaaa para yyyy-mm-dd
+  const [day, month, year] = data.split('/');
+  const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+  if (!scales[dateKey]) {
+    scales[dateKey] = [];
   }
 
-  scales[data].push(membro);
+  scales[dateKey].push(membro);
 
   document.getElementById('agendaForm').reset();
+  selectedDate = null;
   renderCalendar();
 
   alert('Escala adicionada com sucesso!');

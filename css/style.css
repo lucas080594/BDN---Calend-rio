@@ -390,77 +390,159 @@ header p {
   background: #ff5252;
 }
 
-/* ===== AGENDA CULTO ===== */
-.agenda-culto {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 10px;
-  padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: 4px solid #4a9eff;
+/* ===== DATE PICKER ===== */
+.date-picker-wrapper {
+  position: relative;
 }
 
-.agenda-culto h3 {
-  color: #4a9eff;
-  margin-bottom: 12px;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.form-group {
-  margin-bottom: 12px;
-}
-
-.form-group label {
-  display: block;
-  color: #e0e0e0;
-  font-size: 11px;
-  margin-bottom: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.form-group input,
-.form-group select {
+#agendaData {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   color: #e0e0e0;
   font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.form-group input::placeholder {
-  color: rgba(224, 224, 224, 0.4);
+#agendaData:hover {
+  border-color: #4a9eff;
+  background: rgba(74, 158, 255, 0.1);
 }
 
-.form-group input:focus,
-.form-group select:focus {
+#agendaData:focus {
   outline: none;
   border-color: #4a9eff;
   background: rgba(74, 158, 255, 0.1);
 }
 
-.btn-salvar {
-  width: 100%;
-  padding: 10px;
-  background: #4a9eff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.calendar-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #1a2a4e 0%, #0f1929 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 8px;
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  display: none;
 }
 
-.btn-salvar:hover {
-  background: #3a8eef;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+.calendar-popup.active {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendar-header-popup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.calendar-header-popup h4 {
+  color: #f4c430;
+  font-size: 14px;
+  text-transform: capitalize;
+  flex: 1;
+  text-align: center;
+}
+
+.nav-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: #f4c430;
+  color: #1a2a4e;
+  border-color: #f4c430;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: #4a9eff;
+  padding: 6px 0;
+  text-transform: uppercase;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day-popup {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.calendar-day-popup:hover {
+  background: rgba(74, 158, 255, 0.2);
+  border-color: #4a9eff;
+  transform: scale(1.05);
+}
+
+.calendar-day-popup.other-month {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calendar-day-popup.other-month:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1);
+}
+
+.calendar-day-popup.selected {
+  background: #f4c430;
+  color: #1a2a4e;
+  border-color: #f4c430;
+  font-weight: bold;
+}
+
+.calendar-day-popup.today {
+  border: 2px solid #4ade80;
 }
 
 /* ===== EQUIPE ===== */

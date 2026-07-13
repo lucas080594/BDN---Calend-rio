@@ -114,35 +114,54 @@
       </div>
 
       <!-- AGENDA CULTO -->
-      <div class="agenda-culto">
-        <h3>➕ Agendar Culto</h3>
-        <form id="agendaForm">
-          <div class="form-group">
-            <label for="agendaData">dd/mm/aaaa</label>
-            <input type="text" id="agendaData" placeholder="dd/mm/aaaa" required>
+<div class="agenda-culto">
+  <h3>➕ Agendar Culto</h3>
+  <form id="agendaForm">
+    <div class="form-group">
+      <label for="agendaData">Data</label>
+      <div class="date-picker-wrapper">
+        <input type="text" id="agendaData" placeholder="dd/mm/aaaa" readonly>
+        <div class="calendar-popup" id="calendarPopup">
+          <div class="calendar-header-popup">
+            <button type="button" class="nav-btn" id="prevMonthPopup">◀</button>
+            <h4 id="monthYearPopup">julho 2026</h4>
+            <button type="button" class="nav-btn" id="nextMonthPopup">▶</button>
           </div>
-
-          <div class="form-group">
-            <label for="agendaTipo">Tipo</label>
-            <select id="agendaTipo" required>
-              <option value="">Quinta</option>
-              <option value="Domingo Noite">Domingo Noite</option>
-              <option value="Domingo Manhã">Domingo Manhã</option>
-              <option value="Extra">Extra</option>
-            </select>
+          <div class="calendar-weekdays">
+            <div class="weekday">Dom</div>
+            <div class="weekday">Seg</div>
+            <div class="weekday">Ter</div>
+            <div class="weekday">Qua</div>
+            <div class="weekday">Qui</div>
+            <div class="weekday">Sex</div>
+            <div class="weekday">Sáb</div>
           </div>
-
-          <div class="form-group">
-            <label for="agendaMembro">Selecionar Membro...</label>
-            <select id="agendaMembro" required>
-              <option value="">Selecionar Membro...</option>
-              <!-- Preenchido por JavaScript -->
-            </select>
-          </div>
-
-          <button type="submit" class="btn-salvar">Salvar Escala</button>
-        </form>
+          <div class="calendar-days" id="calendarDaysPopup"></div>
+        </div>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="agendaTipo">Tipo</label>
+      <select id="agendaTipo" required>
+        <option value="">Selecionar...</option>
+        <option value="Quinta">Quinta</option>
+        <option value="Domingo Noite">Domingo Noite</option>
+        <option value="Domingo Manhã">Domingo Manhã</option>
+        <option value="Extra">Extra</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="agendaMembro">Selecionar Membro...</label>
+      <select id="agendaMembro" required>
+        <option value="">Selecionar Membro...</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-salvar">Salvar Escala</button>
+  </form>
+</div>
 
       <!-- EQUIPE -->
       <div class="team">
