@@ -1,81 +1,155 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escala de Áudio</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala de Áudio - Bola de Neve Sorocaba</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- HEADER -->
+    <header>
+        <h1>🎤 MINISTÉRIO DE ÁUDIO - BOLA DE NEVE SOROCABA</h1>
+        <p style="color: #1a2a4e; margin-top: 5px; font-size: 12px;">
+            Login Admin | 
+            <a href="mailto:contato@boladenevsorocaba.com.br" style="color: #1a2a4e; text-decoration: none;">contato@boladenevsorocaba.com.br</a>
+        </p>
+    </header>
 
-  <header class="topbar">
-    <h1>🎚️ Escala de Áudio</h1>
-    <div id="auth-area">
-      <button id="btn-open-login" class="btn btn-outline">Login Admin</button>
-      <div id="admin-info" class="hidden">
-        <span id="admin-email"></span>
-        <button id="btn-logout" class="btn btn-outline">Sair</button>
-      </div>
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="container">
+        <!-- CONTEÚDO PRINCIPAL (CALENDÁRIO) -->
+        <div class="main-content">
+            <!-- CONTROLE DO MÊS -->
+            <div class="month-control">
+                <button id="prevMonth">← Anterior</button>
+                <h2 id="monthYear">Julho 2026</h2>
+                <button id="nextMonth">Próximo →</button>
+            </div>
+
+            <!-- CALENDÁRIO -->
+            <div class="calendar">
+                <div class="calendar-header">
+                    <div class="day-name">Dom</div>
+                    <div class="day-name">Seg</div>
+                    <div class="day-name">Ter</div>
+                    <div class="day-name">Qua</div>
+                    <div class="day-name">Qui</div>
+                    <div class="day-name">Sex</div>
+                    <div class="day-name">Sab</div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Preenchido por JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDEBAR DIREITA -->
+        <div class="sidebar">
+            <!-- PRÓXIMAS ESCALAS -->
+            <div class="next-scales">
+                <h3>📅 Próximas Escalas</h3>
+                <div id="nextScalesList">
+                    <div class="scale-card">
+                        <div class="scale-date">14 de Julho</div>
+                        <div class="scale-name">João Silva</div>
+                    </div>
+                    <div class="scale-card">
+                        <div class="scale-date">21 de Julho</div>
+                        <div class="scale-name">Maria Santos</div>
+                    </div>
+                    <div class="scale-card">
+                        <div class="scale-date">28 de Julho</div>
+                        <div class="scale-name">Pedro Costa</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESTATÍSTICAS -->
+            <div class="statistics">
+                <h3>📊 Participações no Mês</h3>
+                <div class="stat-item">
+                    <span class="stat-name">João Silva</span>
+                    <span class="stat-count">3</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-name">Maria Santos</span>
+                    <span class="stat-count">2</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-name">Pedro Costa</span>
+                    <span class="stat-count">1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-name">Ana Silva</span>
+                    <span class="stat-count">4</span>
+                </div>
+            </div>
+
+            <!-- AGENDA CULTO -->
+            <div class="agenda-culto">
+                <h3>⛪ Agenda Culto</h3>
+                <div class="form-group">
+                    <label for="cultoDate">Data:</label>
+                    <input type="date" id="cultoDate" placeholder="Selecione a data">
+                </div>
+                <div class="form-group">
+                    <label for="cultoTime">Horário:</label>
+                    <input type="time" id="cultoTime" placeholder="Horário">
+                </div>
+                <div class="form-group">
+                    <label for="cultoType">Tipo de Culto:</label>
+                    <select id="cultoType">
+                        <option>Domingo (Manhã)</option>
+                        <option>Domingo (Noite)</option>
+                        <option>Quarta-feira</option>
+                        <option>Sexta-feira</option>
+                    </select>
+                </div>
+                <button class="btn-add" onclick="addCulto()">Adicionar Culto</button>
+            </div>
+
+            <!-- EQUIPE -->
+            <div class="team">
+                <h3>👥 Equipe</h3>
+                <div class="form-group">
+                    <label for="memberName">Nome do Membro:</label>
+                    <input type="text" id="memberName" placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="memberRole">Função:</label>
+                    <select id="memberRole">
+                        <option>Técnico de Som</option>
+                        <option>Operador</option>
+                        <option>Supervisor</option>
+                        <option>Assistente</option>
+                    </select>
+                </div>
+                <button class="btn-add" onclick="addMember()">Adicionar Membro</button>
+                
+                <h4 style="color: #f4c430; margin-top: 15px; margin-bottom: 10px; font-size: 13px;">Membros Cadastrados:</h4>
+                <ul class="team-list" id="teamList">
+                    <li>
+                        João Silva
+                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
+                    </li>
+                    <li>
+                        Maria Santos
+                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
+                    </li>
+                    <li>
+                        Pedro Costa
+                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
+                    </li>
+                    <li>
+                        Ana Silva
+                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <div id="login-modal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Login do Administrador</h2>
-      <input type="email" id="login-email" placeholder="E-mail">
-      <input type="password" id="login-password" placeholder="Senha">
-      <div class="modal-actions">
-        <button id="btn-login" class="btn btn-primary">Entrar</button>
-        <button id="btn-close-login" class="btn btn-outline">Cancelar</button>
-      </div>
-      <p id="login-error" class="error hidden"></p>
-    </div>
-  </div>
-
-  <main>
-    <section class="card">
-      <h2>📋 Próximas Escalas</h2>
-      <ul id="upcoming-list" class="list"></ul>
-    </section>
-
-    <section class="card">
-      <div class="calendar-header">
-        <button id="prev-month" class="btn btn-outline">◀</button>
-        <h2 id="calendar-title"></h2>
-        <button id="next-month" class="btn btn-outline">▶</button>
-      </div>
-      <div id="calendar-grid" class="calendar-grid"></div>
-    </section>
-
-    <section class="card">
-      <h2>👥 Equipe</h2>
-      <div id="team-form" class="hidden">
-        <input type="text" id="member-name" placeholder="Nome do membro">
-        <input type="text" id="member-role" placeholder="Função (ex: Técnico de som)">
-        <button id="btn-add-member" class="btn btn-primary">Adicionar</button>
-      </div>
-      <ul id="team-list" class="list"></ul>
-    </section>
-  </main>
-
-  <div id="assign-modal" class="modal hidden">
-    <div class="modal-content">
-      <h2 id="assign-date-title"></h2>
-      <select id="assign-member-select"></select>
-      <input type="text" id="assign-note" placeholder="Observação (opcional)">
-      <div class="modal-actions">
-        <button id="btn-save-assign" class="btn btn-primary">Salvar</button>
-        <button id="btn-remove-assign" class="btn btn-danger">Remover escala</button>
-        <button id="btn-close-assign" class="btn btn-outline">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <script src="js/firebase-config.js"></script>
-  <script src="js/app.js"></script>
+    <script src="js/calendar.js"></script>
 </body>
 </html>
