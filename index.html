@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala de Áudio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>🎚️ Escala de Áudio</h1>
+    <div id="auth-area">
+      <button id="btn-open-login" class="btn btn-outline">Login Admin</button>
+      <div id="admin-info" class="hidden">
+        <span id="admin-email"></span>
+        <button id="btn-logout" class="btn btn-outline">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Login do Administrador</h2>
+      <input type="email" id="login-email" placeholder="E-mail">
+      <input type="password" id="login-password" placeholder="Senha">
+      <div class="modal-actions">
+        <button id="btn-login" class="btn btn-primary">Entrar</button>
+        <button id="btn-close-login" class="btn btn-outline">Cancelar</button>
+      </div>
+      <p id="login-error" class="error hidden"></p>
+    </div>
+  </div>
+
+  <main>
+    <section class="card">
+      <h2>📋 Próximas Escalas</h2>
+      <ul id="upcoming-list" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <div class="calendar-header">
+        <button id="prev-month" class="btn btn-outline">◀</button>
+        <h2 id="calendar-title"></h2>
+        <button id="next-month" class="btn btn-outline">▶</button>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2>👥 Equipe</h2>
+      <div id="team-form" class="hidden">
+        <input type="text" id="member-name" placeholder="Nome do membro">
+        <input type="text" id="member-role" placeholder="Função (ex: Técnico de som)">
+        <button id="btn-add-member" class="btn btn-primary">Adicionar</button>
+      </div>
+      <ul id="team-list" class="list"></ul>
+    </section>
+  </main>
+
+  <div id="assign-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="assign-date-title"></h2>
+      <select id="assign-member-select"></select>
+      <input type="text" id="assign-note" placeholder="Observação (opcional)">
+      <div class="modal-actions">
+        <button id="btn-save-assign" class="btn btn-primary">Salvar</button>
+        <button id="btn-remove-assign" class="btn btn-danger">Remover escala</button>
+        <button id="btn-close-assign" class="btn btn-outline">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
