@@ -1,141 +1,186 @@
-let currentDate = new Date(2026, 6, 1); // Julho 2026
+// ===== VARIÁVEIS GLOBAIS =====
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let scales = {};
+let teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Oliveira'];
 
-// Dados de exemplo (depois integraremos com Firebase)
-const teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Silva'];
-const scales = {
-    '2026-07-14': 'João Silva',
-    '2026-07-21': 'Maria Santos',
-    '2026-07-28': 'Pedro Costa',
-    '2026-07-07': 'Ana Silva',
-    '2026-07-05': 'VAGO'
-};
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+  renderCalendar();
+  updateTeamSelect();
+  
+  // Event Listeners
+  document.getElementById('prevMonth').addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    renderCalendar();
+  });
 
-// Renderizar calendário
+  document.getElementById('nextMonth').addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    renderCalendar();
+  });
+
+  document.getElementById('agendaForm').addEventListener('submit', addScale);
+  document.getElementById('teamForm').addEventListener('submit', addTeamMember);
+});
+
+// ===== RENDERIZAR CALENDÁRIO =====
 function renderCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    
-    // Atualizar título
-    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    document.getElementById('monthYear').textContent = `${monthNames[month]} ${year}`;
-    
-    // Limpar grid
-    const grid = document.getElementById('calendarGrid');
-    grid.innerHTML = '';
-    
-    // Primeiro dia do mês
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(year, month, 0).getDate();
-    
-    // Dias do mês anterior
-    for (let i = firstDay - 1; i >= 0; i--) {
-        const day = daysInPrevMonth - i;
-        const dayDiv = createDayDiv(day, true);
-        grid.appendChild(dayDiv);
-    }
-    
-    // Dias do mês atual
-    for (let day = 1; day <= daysInMonth; day++) {
-        const dayDiv = createDayDiv(day, false, year, month);
-        grid.appendChild(dayDiv);
-    }
-    
-    // Dias do próximo mês
-    const totalCells = grid.children.length;
-    const remainingCells = 42 - totalCells; // 6 linhas x 7 dias
-    for (let day = 1; day <= remainingCells; day++) {
-        const dayDiv = createDayDiv(day, true);
-        grid.appendChild(dayDiv);
-    }
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+  
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  document.getElementById('monthYear').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const calendarGrid = document.getElementById('calendarGrid');
+  calendarGrid.innerHTML = '';
+
+  // Dias do mês anterior
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const day = daysInPrevMonth - i;
+    const dayElement = createDayElement(day, true);
+    calendarGrid.appendChild(dayElement);
+  }
+
+  // Dias do mês atual
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayElement = createDayElement(day, false);
+    calendarGrid.appendChild(dayElement);
+  }
+
+  // Dias do próximo mês
+  const totalCells = calendarGrid.children.length;
+  const remainingCells = 42 - totalCells;
+  for (let day = 1; day <= remainingCells; day++) {
+    const dayElement = createDayElement(day, true);
+    calendarGrid.appendChild(dayElement);
+  }
 }
 
-// Criar div de dia
-function createDayDiv(day, isOtherMonth, year, month) {
-    const dayDiv = document.createElement('div');
-    dayDiv.className = 'calendar-day';
-    
-    if (isOtherMonth) {
-        dayDiv.classList.add('other-month');
-    }
-    
-    const dayNumber = document.createElement('div');
-    dayNumber.className = 'day-number';
-    dayNumber.textContent = day;
-    dayDiv.appendChild(dayNumber);
-    
-    // Adicionar escala se existir
-    if (!isOtherMonth && year && month !== undefined) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        if (scales[dateStr]) {
-            const content = document.createElement('div');
-            content.className = 'day-content';
-            
-            const scale = scales[dateStr];
-            const span = document.createElement('span');
-            span.className = scale === 'VAGO' ? 'vago' : 'team-member';
-            span.textContent = scale;
-            
-            content.appendChild(span);
-            dayDiv.appendChild(content);
-        }
-    }
-    
-    return dayDiv;
+// ===== CRIAR ELEMENTO DO DIA =====
+function createDayElement(day, isOtherMonth) {
+  const dayElement = document.createElement('div');
+  dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''}`;
+
+  const dayNumber = document.createElement('div');
+  dayNumber.className = 'day-number';
+  dayNumber.textContent = day;
+
+  const dayContent = document.createElement('div');
+  dayContent.className = 'day-content';
+
+  // Simular escalas para exemplo
+  const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  if (scales[dateKey]) {
+    scales[dateKey].forEach(scale => {
+      const scaleDiv = document.createElement('div');
+      scaleDiv.className = scale === 'VAGO' ? 'vago' : 'team-member';
+      scaleDiv.textContent = scale;
+      dayContent.appendChild(scaleDiv);
+    });
+  }
+
+  dayElement.appendChild(dayNumber);
+  dayElement.appendChild(dayContent);
+
+  return dayElement;
 }
 
-// Navegação
-document.getElementById('prevMonth').addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar();
-});
+// ===== ADICIONAR ESCALA =====
+function addScale(e) {
+  e.preventDefault();
 
-document.getElementById('nextMonth').addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar();
-});
+  const data = document.getElementById('agendaData').value;
+  const tipo = document.getElementById('agendaTipo').value;
+  const membro = document.getElementById('agendaMembro').value;
 
-// Adicionar membro
-function addMember() {
-    const name = document.getElementById('memberName').value;
-    const role = document.getElementById('memberRole').value;
-    
-    if (!name.trim()) {
-        alert('Por favor, insira o nome do membro');
-        return;
-    }
-    
-    const li = document.createElement('li');
-    li.innerHTML = `
-        ${name} (${role})
-        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
-    `;
-    
-    document.getElementById('teamList').appendChild(li);
-    document.getElementById('memberName').value = '';
+  if (!data || !tipo || !membro) {
+    alert('Preencha todos os campos!');
+    return;
+  }
+
+  if (!scales[data]) {
+    scales[data] = [];
+  }
+
+  scales[data].push(`${membro} (${tipo})`);
+
+  // Limpar formulário
+  document.getElementById('agendaForm').reset();
+
+  // Atualizar calendário
+  renderCalendar();
+
+  alert('Escala adicionada com sucesso!');
 }
 
-// Remover membro
+// ===== ADICIONAR MEMBRO DA EQUIPE =====
+function addTeamMember(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('teamName').value.trim();
+
+  if (!name) {
+    alert('Digite um nome!');
+    return;
+  }
+
+  if (teamMembers.includes(name)) {
+    alert('Este membro já existe!');
+    return;
+  }
+
+  teamMembers.push(name);
+
+  // Atualizar lista visual
+  const teamList = document.getElementById('teamList');
+  const li = document.createElement('li');
+  li.innerHTML = `
+    ${name}
+    <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+  `;
+  teamList.appendChild(li);
+
+  // Limpar formulário
+  document.getElementById('teamName').value = '';
+
+  // Atualizar select
+  updateTeamSelect();
+}
+
+// ===== DELETAR MEMBRO =====
 function deleteMember(button) {
-    button.parentElement.remove();
+  const li = button.parentElement;
+  const name = li.textContent.replace('❌', '').trim();
+
+  teamMembers = teamMembers.filter(m => m !== name);
+  li.remove();
+
+  updateTeamSelect();
 }
 
-// Adicionar culto
-function addCulto() {
-    const date = document.getElementById('cultoDate').value;
-    const time = document.getElementById('cultoTime').value;
-    const type = document.getElementById('cultoType').value;
-    
-    if (!date || !time) {
-        alert('Por favor, preencha data e horário');
-        return;
-    }
-    
-    alert(`Culto adicionado: ${date} às ${time} (${type})`);
-    document.getElementById('cultoDate').value = '';
-    document.getElementById('cultoTime').value = '';
-}
+// ===== ATUALIZAR SELECT DE MEMBROS =====
+function updateTeamSelect() {
+  const select = document.getElementById('agendaMembro');
+  select.innerHTML = '<option value="">Selecione...</option>';
 
-// Renderizar calendário ao carregar
-renderCalendar();
+  teamMembers.forEach(member => {
+    const option = document.createElement('option');
+    option.value = member;
+    option.textContent = member;
+    select.appendChild(option);
+  });
+}
