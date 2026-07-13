@@ -25,10 +25,10 @@
     <div class="main-content">
       <!-- CONTROLE DO MÊS -->
       <div class="month-control">
-        <button id="prevMonth">◀</button>
+        <button id="prevMonth" class="btn-nav">◀ Anterior</button>
         <h2 id="monthYear">julho de 2026</h2>
-        <button class="today-btn">today</button>
-        <button id="nextMonth">▶</button>
+        <button id="todayBtn" class="btn-nav today-btn">Hoje</button>
+        <button id="nextMonth" class="btn-nav">Próximo ▶</button>
       </div>
 
       <!-- CALENDÁRIO -->
@@ -114,36 +114,36 @@
         </div>
       </div>
 
-<!-- AGENDA CULTO -->
-<div class="agenda-culto">
-  <h3>➕ Agendar Culto</h3>
-  <form id="agendaForm">
-    <div class="form-group">
-      <label for="agendaData">Data</label>
-      <input type="date" id="agendaData" required>
-    </div>
+      <!-- AGENDA CULTO -->
+      <div class="agenda-culto">
+        <h3>➕ Agendar Culto</h3>
+        <form id="agendaForm">
+          <div class="form-group">
+            <label for="agendaData">Data</label>
+            <input type="date" id="agendaData" required>
+          </div>
 
-    <div class="form-group">
-      <label for="agendaTipo">Tipo</label>
-      <select id="agendaTipo" required>
-        <option value="">Selecionar...</option>
-        <option value="Domingo Noite">Domingo Noite</option>
-        <option value="Domingo Manhã">Domingo Manhã</option>
-        <option value="Extra">Extra</option>
-      </select>
-    </div>
+          <div class="form-group">
+            <label for="agendaTipo">Tipo</label>
+            <select id="agendaTipo" required>
+              <option value="">Selecionar...</option>
+              <option value="Domingo Noite">Domingo Noite</option>
+              <option value="Domingo Manhã">Domingo Manhã</option>
+              <option value="Extra">Extra</option>
+            </select>
+          </div>
 
-    <div class="form-group">
-      <label for="agendaMembro">Membro</label>
-      <select id="agendaMembro" required>
-        <option value="">Selecionar Membro...</option>
-        <!-- Preenchido por JavaScript -->
-      </select>
-    </div>
+          <div class="form-group">
+            <label for="agendaMembro">Membro</label>
+            <select id="agendaMembro" required>
+              <option value="">Selecionar Membro...</option>
+              <option value="VAGO">VAGO</option>
+            </select>
+          </div>
 
-    <button type="submit" class="btn-salvar">Salvar Escala</button>
-  </form>
-</div>
+          <button type="submit" class="btn-salvar">Salvar Escala</button>
+        </form>
+      </div>
 
       <!-- EQUIPE -->
       <div class="team">
@@ -155,19 +155,19 @@
         <ul class="team-list" id="teamList">
           <li>
             Vitor
-            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
             Cauan
-            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
             Carlinhos
-            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
             Clovis
-            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
           </li>
         </ul>
       </div>

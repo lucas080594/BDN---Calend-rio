@@ -2,18 +2,23 @@
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let scales = {};
-let teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Oliveira'];
+let teamMembers = ['Vitor', 'Cauan', 'Carlinhos', 'Clovis'];
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Página carregada');
+  console.log('✅ Página carregada');
   renderCalendar();
   updateTeamSelect();
-  
-  // Event Listeners para navegação de mês
+  setupEventListeners();
+});
+
+// ===== CONFIGURAR EVENT LISTENERS =====
+function setupEventListeners() {
+  // Botões de navegação
   const prevBtn = document.getElementById('prevMonth');
   const nextBtn = document.getElementById('nextMonth');
-  
+  const todayBtn = document.getElementById('todayBtn');
+
   if (prevBtn) {
     prevBtn.addEventListener('click', function(e) {
       e.preventDefault();
@@ -23,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentYear--;
       }
       renderCalendar();
+      console.log('⬅️ Mês anterior:', currentMonth + 1, currentYear);
     });
   }
 
@@ -35,31 +41,37 @@ document.addEventListener('DOMContentLoaded', function() {
         currentYear++;
       }
       renderCalendar();
+      console.log('➡️ Próximo mês:', currentMonth + 1, currentYear);
     });
   }
 
-  // Event Listener para formulário de agenda
+  if (todayBtn) {
+    todayBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const today = new Date();
+      currentMonth = today.getMonth();
+      currentYear = today.getFullYear();
+      renderCalendar();
+      console.log('📅 Hoje:', currentMonth + 1, currentYear);
+    });
+  }
+
+  // Formulário de agenda
   const agendaForm = document.getElementById('agendaForm');
   if (agendaForm) {
     agendaForm.addEventListener('submit', addScale);
   }
-
-  // Event Listener para formulário de equipe
-  const teamForm = document.getElementById('teamForm');
-  if (teamForm) {
-    teamForm.addEventListener('submit', addTeamMember);
-  }
-});
+}
 
 // ===== RENDERIZAR CALENDÁRIO =====
 function renderCalendar() {
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
-  
+
   const monthNames = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
   ];
 
   // Atualizar título do mês
@@ -70,7 +82,7 @@ function renderCalendar() {
 
   const calendarGrid = document.getElementById('calendarGrid');
   if (!calendarGrid) return;
-  
+
   calendarGrid.innerHTML = '';
 
   // Dias do mês anterior
@@ -133,12 +145,12 @@ function addScale(e) {
   const membro = document.getElementById('agendaMembro').value;
 
   if (!dataInput || !tipo || !membro) {
-    alert('Preencha todos os campos!');
+    alert('❌ Preencha todos os campos!');
     return;
   }
 
   // Converter data de YYYY-MM-DD para formato interno
-  const dateKey = dataInput; // Já está em YYYY-MM-DD
+  const dateKey = dataInput;
 
   if (!scales[dateKey]) {
     scales[dateKey] = [];
@@ -146,25 +158,26 @@ function addScale(e) {
 
   scales[dateKey].push(membro);
 
+  console.log('✅ Escala adicionada:', membro, 'em', dateKey);
+
   document.getElementById('agendaForm').reset();
   renderCalendar();
 
-  alert('✅ Escala adicionada com sucesso!');
+  alert(`✅ Escala de ${membro} adicionada com sucesso em ${dataInput}!`);
 }
 
 // ===== ADICIONAR MEMBRO DA EQUIPE =====
-function addTeamMember(e) {
-  e.preventDefault();
-
-  const name = document.getElementById('teamName').value.trim();
+function addTeamMember() {
+  const nameInput = document.getElementById('teamName');
+  const name = nameInput.value.trim();
 
   if (!name) {
-    alert('Digite um nome!');
+    alert('❌ Digite um nome!');
     return;
   }
 
   if (teamMembers.includes(name)) {
-    alert('Este membro já existe!');
+    alert('❌ Este membro já existe!');
     return;
   }
 
@@ -179,10 +192,9 @@ function addTeamMember(e) {
   `;
   teamList.appendChild(li);
 
-  // Limpar formulário
-  document.getElementById('teamName').value = '';
+  console.log('✅ Membro adicionado:', name);
 
-  // Atualizar select
+  nameInput.value = '';
   updateTeamSelect();
 }
 
@@ -191,18 +203,21 @@ function deleteMember(button) {
   const li = button.parentElement;
   const name = li.textContent.replace('❌', '').trim();
 
-  teamMembers = teamMembers.filter(m => m !== name);
-  li.remove();
-
-  updateTeamSelect();
+  if (confirm(`Deseja remover ${name}?`)) {
+    teamMembers = teamMembers.filter(m => m !== name);
+    li.remove();
+    console.log('❌ Membro removido:', name);
+    updateTeamSelect();
+  }
 }
 
 // ===== ATUALIZAR SELECT DE MEMBROS =====
 function updateTeamSelect() {
   const select = document.getElementById('agendaMembro');
   if (!select) return;
-  
+
   select.innerHTML = '<option value="">Selecionar Membro...</option>';
+  select.innerHTML += '<option value="VAGO">VAGO</option>';
 
   teamMembers.forEach(member => {
     const option = document.createElement('option');

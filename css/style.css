@@ -21,6 +21,7 @@ header {
   align-items: center;
   margin-bottom: 30px;
   border-bottom: 2px solid #f4c430;
+  border-radius: 8px;
 }
 
 header h1 {
@@ -59,6 +60,12 @@ header p {
   background: #4ade80;
   border-radius: 50%;
   display: inline-block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 /* ===== CONTAINER PRINCIPAL ===== */
@@ -80,12 +87,13 @@ header p {
 /* ===== CONTROLE DO MÊS ===== */
 .month-control {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-.month-control button {
+.btn-nav {
   background: rgba(255, 255, 255, 0.1);
   color: #e0e0e0;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -95,35 +103,36 @@ header p {
   font-weight: bold;
   transition: all 0.3s ease;
   font-size: 14px;
+  white-space: nowrap;
 }
 
-.month-control button:hover {
+.btn-nav:hover {
   background: #f4c430;
   color: #1a2a4e;
   border-color: #f4c430;
+  transform: translateY(-2px);
+}
+
+.btn-nav:active {
+  transform: translateY(0);
+}
+
+.today-btn {
+  background: rgba(74, 158, 255, 0.2);
+  border-color: #4a9eff;
+}
+
+.today-btn:hover {
+  background: #4a9eff;
+  color: white;
 }
 
 .month-control h2 {
   color: #f4c430;
   font-size: 32px;
-  flex: 1;
-  text-align: center;
   text-transform: capitalize;
-}
-
-.today-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #888;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.today-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  min-width: 300px;
+  text-align: center;
 }
 
 /* ===== CALENDÁRIO ===== */
@@ -224,43 +233,15 @@ header p {
   font-weight: 500;
 }
 
-/* ===== CONTROLE DO MÊS ===== */
-.month-control {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 15px;
-}
-
-.month-control h2 {
-  flex: 1;
-  text-align: center;
-  color: #ffd700;
-  font-size: 20px;
-  margin: 0;
-}
-
-.btn-month {
-  padding: 10px 15px;
-  background: #4a9eff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  font-size: 12px;
-}
-
-.btn-month:hover {
-  background: #3a8eef;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
-}
-
-.btn-month:active {
-  transform: translateY(0);
+.vago {
+  color: #fff;
+  background: #ff6b6b;
+  padding: 4px 8px;
+  border-radius: 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: 500;
 }
 
 /* ===== PARTICIPAÇÕES NO MÊS ===== */
@@ -292,6 +273,12 @@ header p {
   padding: 15px;
   border-radius: 8px;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(244, 196, 48, 0.1);
+  border-color: #f4c430;
 }
 
 .stat-name {
@@ -418,7 +405,7 @@ header p {
   background: #ff5252;
 }
 
-/* ===== AGENDA CULTO - AJUSTES ===== */
+/* ===== AGENDA CULTO ===== */
 .agenda-culto {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
@@ -458,7 +445,7 @@ header p {
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
@@ -468,9 +455,8 @@ header p {
   transition: all 0.3s ease;
 }
 
-.form-group input::placeholder,
-.form-group select::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+.form-group input::placeholder {
+  color: rgba(224, 224, 224, 0.4);
 }
 
 .form-group input:focus,
@@ -481,14 +467,41 @@ header p {
   box-shadow: 0 0 8px rgba(74, 158, 255, 0.2);
 }
 
-/* Estilo para o input de data */
-.form-group input[type="date"] {
+/* ===== DATE PICKER ===== */
+input[type="date"] {
   color-scheme: dark;
+  cursor: pointer;
 }
 
-.form-group input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.2);
   cursor: pointer;
+  padding: 4px;
+}
+
+input[type="date"]::-webkit-outer-spin-button,
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+/* ===== SELECT CUSTOMIZADO ===== */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 32px !important;
+}
+
+select option {
+  background: #1a2a4e;
+  color: #ffffff;
+}
+
+select option:checked {
+  background: linear-gradient(#4a9eff, #4a9eff);
+  background-color: #4a9eff !important;
 }
 
 .btn-salvar {
@@ -515,21 +528,6 @@ header p {
 
 .btn-salvar:active {
   transform: translateY(0);
-}
-
-.form-group select {
-  background-color: #1a1f3a !important;
-  color: #ffffff !important;
-}
-
-.form-group select option {
-  background-color: #1a1f3a;
-  color: #ffffff;
-}
-
-.form-group select option:checked {
-  background: linear-gradient(#4a9eff, #4a9eff);
-  background-color: #4a9eff !important;
 }
 
 /* ===== EQUIPE ===== */
@@ -566,6 +564,13 @@ header p {
   border-radius: 5px;
   color: #e0e0e0;
   font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.team-form input:focus {
+  outline: none;
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
 }
 
 .team-form input::placeholder {
@@ -583,10 +588,12 @@ header p {
   transition: all 0.3s ease;
   font-size: 12px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .btn-add-member:hover {
   background: #3ad66f;
+  transform: translateY(-2px);
 }
 
 .team-list {
@@ -644,10 +651,20 @@ header p {
     flex-direction: column;
     gap: 15px;
     text-align: center;
+    padding: 15px 20px;
+  }
+
+  header h1 {
+    font-size: 20px;
   }
 
   .month-control {
     flex-wrap: wrap;
+  }
+
+  .month-control h2 {
+    min-width: auto;
+    font-size: 24px;
   }
 
   .calendar-day {
