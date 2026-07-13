@@ -1,167 +1,76 @@
 // ===== VARIÁVEIS GLOBAIS =====
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
-let popupMonth = new Date().getMonth();
-let popupYear = new Date().getFullYear();
-let selectedDate = null;
 let scales = {};
-let teamMembers = ['Lucas', 'Vitor', 'Cauan', 'Carlinhos', 'Clovis'];
+let teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Oliveira'];
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Página carregada');
   renderCalendar();
   updateTeamSelect();
-  initDatePicker();
   
-  document.getElementById('prevMonth').addEventListener('click', () => {
-    currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
-    renderCalendar();
-  });
-
-  document.getElementById('nextMonth').addEventListener('click', () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
-    renderCalendar();
-  });
-
-  document.getElementById('agendaForm').addEventListener('submit', addScale);
-});
-
-// ===== INICIALIZAR DATE PICKER =====
-function initDatePicker() {
-  const agendaDataInput = document.getElementById('agendaData');
-  const calendarPopup = document.getElementById('calendarPopup');
-
-  agendaDataInput.addEventListener('click', () => {
-    calendarPopup.classList.toggle('active');
-    if (calendarPopup.classList.contains('active')) {
-      renderDatePickerCalendar();
-    }
-  });
-
-  document.getElementById('prevMonthPopup').addEventListener('click', (e) => {
-    e.preventDefault();
-    popupMonth--;
-    if (popupMonth < 0) {
-      popupMonth = 11;
-      popupYear--;
-    }
-    renderDatePickerCalendar();
-  });
-
-  document.getElementById('nextMonthPopup').addEventListener('click', (e) => {
-    e.preventDefault();
-    popupMonth++;
-    if (popupMonth > 11) {
-      popupMonth = 0;
-      popupYear++;
-    }
-    renderDatePickerCalendar();
-  });
-
-  // Fechar ao clicar fora
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.date-picker-wrapper')) {
-      calendarPopup.classList.remove('active');
-    }
-  });
-}
-
-// ===== RENDERIZAR CALENDÁRIO DO DATE PICKER =====
-function renderDatePickerCalendar() {
-  const firstDay = new Date(popupYear, popupMonth, 1).getDay();
-  const daysInMonth = new Date(popupYear, popupMonth + 1, 0).getDate();
-  const daysInPrevMonth = new Date(popupYear, popupMonth, 0).getDate();
-
-  const monthNames = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-  ];
-
-  document.getElementById('monthYearPopup').textContent = 
-    `${monthNames[popupMonth]} ${popupYear}`;
-
-  const calendarDays = document.getElementById('calendarDaysPopup');
-  calendarDays.innerHTML = '';
-
-  // Dias do mês anterior
-  for (let i = firstDay - 1; i >= 0; i--) {
-    const day = daysInPrevMonth - i;
-    const dayElement = createDatePickerDay(day, true);
-    calendarDays.appendChild(dayElement);
-  }
-
-  // Dias do mês atual
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dayElement = createDatePickerDay(day, false);
-    calendarDays.appendChild(dayElement);
-  }
-
-  // Dias do próximo mês
-  const totalCells = calendarDays.children.length;
-  const remainingCells = 42 - totalCells;
-  for (let day = 1; day <= remainingCells; day++) {
-    const dayElement = createDatePickerDay(day, true);
-    calendarDays.appendChild(dayElement);
-  }
-}
-
-// ===== CRIAR ELEMENTO DO DIA (DATE PICKER) =====
-function createDatePickerDay(day, isOtherMonth) {
-  const dayElement = document.createElement('div');
-  dayElement.className = `calendar-day-popup ${isOtherMonth ? 'other-month' : ''}`;
-  dayElement.textContent = day;
-
-  // Marcar hoje
-  const today = new Date();
-  if (!isOtherMonth && 
-      day === today.getDate() && 
-      popupMonth === today.getMonth() && 
-      popupYear === today.getFullYear()) {
-    dayElement.classList.add('today');
-  }
-
-  // Marcar data selecionada
-  if (selectedDate) {
-    const [selDay, selMonth, selYear] = selectedDate.split('/').map(Number);
-    if (day === selDay && popupMonth === selMonth - 1 && popupYear === selYear) {
-      dayElement.classList.add('selected');
-    }
-  }
-
-  if (!isOtherMonth) {
-    dayElement.addEventListener('click', () => {
-      selectedDate = `${String(day).padStart(2, '0')}/${String(popupMonth + 1).padStart(2, '0')}/${popupYear}`;
-      document.getElementById('agendaData').value = selectedDate;
-      document.getElementById('calendarPopup').classList.remove('active');
-      renderDatePickerCalendar(); // Atualizar seleção visual
+  // Event Listeners para navegação de mês
+  const prevBtn = document.getElementById('prevMonth');
+  const nextBtn = document.getElementById('nextMonth');
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar();
     });
   }
 
-  return dayElement;
-}
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar();
+    });
+  }
 
-// ===== RENDERIZAR CALENDÁRIO PRINCIPAL =====
+  // Event Listener para formulário de agenda
+  const agendaForm = document.getElementById('agendaForm');
+  if (agendaForm) {
+    agendaForm.addEventListener('submit', addScale);
+  }
+
+  // Event Listener para formulário de equipe
+  const teamForm = document.getElementById('teamForm');
+  if (teamForm) {
+    teamForm.addEventListener('submit', addTeamMember);
+  }
+});
+
+// ===== RENDERIZAR CALENDÁRIO =====
 function renderCalendar() {
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
   
   const monthNames = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
-  document.getElementById('monthYear').textContent = `${monthNames[currentMonth]} de ${currentYear}`;
+  // Atualizar título do mês
+  const monthYearElement = document.getElementById('monthYear');
+  if (monthYearElement) {
+    monthYearElement.textContent = `${monthNames[currentMonth]} de ${currentYear}`;
+  }
 
   const calendarGrid = document.getElementById('calendarGrid');
+  if (!calendarGrid) return;
+  
   calendarGrid.innerHTML = '';
 
   // Dias do mês anterior
@@ -186,7 +95,7 @@ function renderCalendar() {
   }
 }
 
-// ===== CRIAR ELEMENTO DO DIA (CALENDÁRIO PRINCIPAL) =====
+// ===== CRIAR ELEMENTO DO DIA =====
 function createDayElement(day, isOtherMonth) {
   const dayElement = document.createElement('div');
   dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''}`;
@@ -198,7 +107,7 @@ function createDayElement(day, isOtherMonth) {
   const dayContent = document.createElement('div');
   dayContent.className = 'day-content';
 
-  // Simular escalas para exemplo
+  // Buscar escalas para este dia
   const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   if (scales[dateKey]) {
     scales[dateKey].forEach(scale => {
@@ -244,7 +153,9 @@ function addScale(e) {
 }
 
 // ===== ADICIONAR MEMBRO DA EQUIPE =====
-function addTeamMember() {
+function addTeamMember(e) {
+  e.preventDefault();
+
   const name = document.getElementById('teamName').value.trim();
 
   if (!name) {
@@ -259,15 +170,19 @@ function addTeamMember() {
 
   teamMembers.push(name);
 
+  // Atualizar lista visual
   const teamList = document.getElementById('teamList');
   const li = document.createElement('li');
   li.innerHTML = `
     ${name}
-    <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+    <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
   `;
   teamList.appendChild(li);
 
+  // Limpar formulário
   document.getElementById('teamName').value = '';
+
+  // Atualizar select
   updateTeamSelect();
 }
 
@@ -285,6 +200,8 @@ function deleteMember(button) {
 // ===== ATUALIZAR SELECT DE MEMBROS =====
 function updateTeamSelect() {
   const select = document.getElementById('agendaMembro');
+  if (!select) return;
+  
   select.innerHTML = '<option value="">Selecionar Membro...</option>';
 
   teamMembers.forEach(member => {
