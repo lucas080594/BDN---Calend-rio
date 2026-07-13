@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+<script src="js/firebase-config.js"></script>
   <!-- HEADER -->
   <header>
     <div class="header-left">
@@ -23,12 +28,12 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-content">
       <!-- CONTROLE DO MÊS -->
-      <div class="month-control">
-        <button id="prevMonth">◀</button>
-        <h2 id="monthYear">julho de 2026</h2>
-        <button class="today-btn">today</button>
-        <button id="nextMonth">▶</button>
-      </div>
+<!-- CONTROLE DO MÊS -->
+<div class="month-control">
+  <button id="prevMonth" class="btn-month">← Anterior</button>
+  <h2 id="monthYear">Julho 2026</h2>
+  <button id="nextMonth" class="btn-month">Próximo →</button>
+</div>
 
       <!-- CALENDÁRIO -->
       <div class="calendar">
