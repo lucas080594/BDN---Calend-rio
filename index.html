@@ -4,11 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escala de Áudio - Bola de Neve Sorocaba</title>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
+    
   <!-- HEADER -->
   <header>
     <div class="header-left">
@@ -24,29 +23,111 @@
   <div class="container">
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-content">
-      <!-- CALENDÁRIO (FullCalendar) -->
-      <div class="calendar-wrapper">
-        <div id="calendar"></div>
+      <!-- CONTROLE DO MÊS -->
+      <div class="month-control">
+        <button id="prevMonth" class="btn-nav">◀ Anterior</button>
+        <h2 id="monthYear">julho de 2026</h2>
+        <button id="todayBtn" class="btn-nav today-btn">Hoje</button>
+        <button id="nextMonth" class="btn-nav">Próximo ▶</button>
+      </div>
+
+      <!-- CALENDÁRIO -->
+      <div class="calendar">
+        <div class="calendar-header">
+          <div class="day-name">dom.</div>
+          <div class="day-name">seg.</div>
+          <div class="day-name">ter.</div>
+          <div class="day-name">qua.</div>
+          <div class="day-name">qui.</div>
+          <div class="day-name">sex.</div>
+          <div class="day-name">sáb.</div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Preenchido por JavaScript -->
+        </div>
       </div>
 
       <!-- PARTICIPAÇÕES NO MÊS -->
       <div class="statistics">
         <h3>📊 Participações no Mês</h3>
-        <div id="listaStats" class="stats-grid">
-          <!-- Preenchido por JavaScript -->
+        <div class="stat-card">
+          <div class="stat-name">Lucas</div>
+          <div class="stat-count">7</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Vitor</div>
+          <div class="stat-count">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Cauan</div>
+          <div class="stat-count">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Carlinhos</div>
+          <div class="stat-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Clovis</div>
+          <div class="stat-count">0</div>
         </div>
       </div>
     </div>
 
     <!-- SIDEBAR DIREITA -->
     <div class="sidebar">
-      <!-- PRÓXIMAS ESCALAS -->
-      <div class="next-scales">
-        <h3>📅 Próximas Escalas</h3>
-        <div class="next-scales-list" id="nextScalesList">
-          <!-- Preenchido por JavaScript -->
+ <!-- PRÓXIMAS ESCALAS -->
+<div class="next-scales">
+  <h3>📅 PRÓXIMAS ESCALAS</h3>
+  <div class="next-scales-list" id="nextScalesList">
+    <div class="scale-card vago">
+      <div class="scale-header">
+        <div class="scale-date-type">06/07/2026 - QUINTA</div>
+        <div class="scale-actions">
+          <button class="edit-btn">EDIT</button>
+          <button class="delete-btn">❌</button>
         </div>
       </div>
+      <div class="scale-name vago-text">VAGO</div>
+      <div class="scale-time">Atrás 1h</div>
+    </div>
+
+    <div class="scale-card extra">
+      <div class="scale-header">
+        <div class="scale-date-type">08/07/2026 - EXTRA</div>
+        <div class="scale-actions">
+          <button class="edit-btn">EDIT</button>
+          <button class="delete-btn">❌</button>
+        </div>
+      </div>
+      <div class="scale-name">Vitor</div>
+      <div class="scale-time">Atrás 1h</div>
+    </div>
+
+    <div class="scale-card vago">
+      <div class="scale-header">
+        <div class="scale-date-type">07/07/2026 - EXTRA</div>
+        <div class="scale-actions">
+          <button class="edit-btn">EDIT</button>
+          <button class="delete-btn">❌</button>
+        </div>
+      </div>
+      <div class="scale-name vago-text">VAGO</div>
+      <div class="scale-time">Atrás 1h</div>
+    </div>
+
+    <div class="scale-card vago">
+      <div class="scale-header">
+        <div class="scale-date-type">08/07/2026 - EXTRA</div>
+        <div class="scale-actions">
+          <button class="edit-btn">EDIT</button>
+          <button class="delete-btn">❌</button>
+        </div>
+      </div>
+      <div class="scale-name vago-text">VAGO</div>
+      <div class="scale-time">Atrás 1h</div>
+    </div>
+  </div>
+</div>
 
       <!-- AGENDA CULTO -->
       <div class="agenda-culto">
@@ -71,7 +152,7 @@
             <label for="agendaMembro">Membro</label>
             <select id="agendaMembro" required>
               <option value="">Selecionar Membro...</option>
-              <!-- Preenchido por JavaScript -->
+              <option value="VAGO">VAGO</option>
             </select>
           </div>
 
@@ -87,30 +168,27 @@
           <button type="button" class="btn-add-member" onclick="addTeamMember()">ADD</button>
         </div>
         <ul class="team-list" id="teamList">
-          <!-- Preenchido por JavaScript -->
+          <li>
+            Vitor
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Cauan
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Carlinhos
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Clovis
+            <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
+          </li>
         </ul>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE EDIÇÃO -->
-  <div id="modalEditar" class="modal-hidden">
-    <div class="modal-content">
-      <h2>Alterar Responsável</h2>
-      <input type="hidden" id="editEscalaId">
-      <div class="form-group">
-        <label>Selecione o Integrante:</label>
-        <select id="editSelectMembro"></select>
-      </div>
-      <div class="modal-buttons">
-        <button onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
-        <button id="btnSalvarEdicao" class="btn-salvar-modal">Salvar</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
