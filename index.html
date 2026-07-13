@@ -1,155 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escala de Áudio - Bola de Neve Sorocaba</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala de Áudio - Bola de Neve Sorocaba</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- HEADER -->
-    <header>
-        <h1>🎤 MINISTÉRIO DE ÁUDIO - BOLA DE NEVE SOROCABA</h1>
-        <p style="color: #1a2a4e; margin-top: 5px; font-size: 12px;">
-            Login Admin | 
-            <a href="mailto:contato@boladenevsorocaba.com.br" style="color: #1a2a4e; text-decoration: none;">contato@boladenevsorocaba.com.br</a>
-        </p>
-    </header>
+  <!-- HEADER -->
+  <header>
+    <h1>🎙️ MINISTÉRIO DE ÁUDIO - BOLA DE NEVE SOROCABA</h1>
+  </header>
 
-    <!-- CONTAINER PRINCIPAL -->
-    <div class="container">
-        <!-- CONTEÚDO PRINCIPAL (CALENDÁRIO) -->
-        <div class="main-content">
-            <!-- CONTROLE DO MÊS -->
-            <div class="month-control">
-                <button id="prevMonth">← Anterior</button>
-                <h2 id="monthYear">Julho 2026</h2>
-                <button id="nextMonth">Próximo →</button>
-            </div>
+  <!-- CONTAINER PRINCIPAL -->
+  <div class="container">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-content">
+      <!-- CONTROLE DO MÊS -->
+      <div class="month-control">
+        <button id="prevMonth">← Anterior</button>
+        <h2 id="monthYear">Julho 2026</h2>
+        <button id="nextMonth">Próximo →</button>
+      </div>
 
-            <!-- CALENDÁRIO -->
-            <div class="calendar">
-                <div class="calendar-header">
-                    <div class="day-name">Dom</div>
-                    <div class="day-name">Seg</div>
-                    <div class="day-name">Ter</div>
-                    <div class="day-name">Qua</div>
-                    <div class="day-name">Qui</div>
-                    <div class="day-name">Sex</div>
-                    <div class="day-name">Sab</div>
-                </div>
-                <div class="calendar-grid" id="calendarGrid">
-                    <!-- Preenchido por JavaScript -->
-                </div>
-            </div>
+      <!-- CALENDÁRIO -->
+      <div class="calendar">
+        <div class="calendar-header">
+          <div class="day-name">Dom</div>
+          <div class="day-name">Seg</div>
+          <div class="day-name">Ter</div>
+          <div class="day-name">Qua</div>
+          <div class="day-name">Qui</div>
+          <div class="day-name">Sex</div>
+          <div class="day-name">Sab</div>
         </div>
-
-        <!-- SIDEBAR DIREITA -->
-        <div class="sidebar">
-            <!-- PRÓXIMAS ESCALAS -->
-            <div class="next-scales">
-                <h3>📅 Próximas Escalas</h3>
-                <div id="nextScalesList">
-                    <div class="scale-card">
-                        <div class="scale-date">14 de Julho</div>
-                        <div class="scale-name">João Silva</div>
-                    </div>
-                    <div class="scale-card">
-                        <div class="scale-date">21 de Julho</div>
-                        <div class="scale-name">Maria Santos</div>
-                    </div>
-                    <div class="scale-card">
-                        <div class="scale-date">28 de Julho</div>
-                        <div class="scale-name">Pedro Costa</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ESTATÍSTICAS -->
-            <div class="statistics">
-                <h3>📊 Participações no Mês</h3>
-                <div class="stat-item">
-                    <span class="stat-name">João Silva</span>
-                    <span class="stat-count">3</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-name">Maria Santos</span>
-                    <span class="stat-count">2</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-name">Pedro Costa</span>
-                    <span class="stat-count">1</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-name">Ana Silva</span>
-                    <span class="stat-count">4</span>
-                </div>
-            </div>
-
-            <!-- AGENDA CULTO -->
-            <div class="agenda-culto">
-                <h3>⛪ Agenda Culto</h3>
-                <div class="form-group">
-                    <label for="cultoDate">Data:</label>
-                    <input type="date" id="cultoDate" placeholder="Selecione a data">
-                </div>
-                <div class="form-group">
-                    <label for="cultoTime">Horário:</label>
-                    <input type="time" id="cultoTime" placeholder="Horário">
-                </div>
-                <div class="form-group">
-                    <label for="cultoType">Tipo de Culto:</label>
-                    <select id="cultoType">
-                        <option>Domingo (Manhã)</option>
-                        <option>Domingo (Noite)</option>
-                        <option>Quarta-feira</option>
-                        <option>Sexta-feira</option>
-                    </select>
-                </div>
-                <button class="btn-add" onclick="addCulto()">Adicionar Culto</button>
-            </div>
-
-            <!-- EQUIPE -->
-            <div class="team">
-                <h3>👥 Equipe</h3>
-                <div class="form-group">
-                    <label for="memberName">Nome do Membro:</label>
-                    <input type="text" id="memberName" placeholder="Nome completo">
-                </div>
-                <div class="form-group">
-                    <label for="memberRole">Função:</label>
-                    <select id="memberRole">
-                        <option>Técnico de Som</option>
-                        <option>Operador</option>
-                        <option>Supervisor</option>
-                        <option>Assistente</option>
-                    </select>
-                </div>
-                <button class="btn-add" onclick="addMember()">Adicionar Membro</button>
-                
-                <h4 style="color: #f4c430; margin-top: 15px; margin-bottom: 10px; font-size: 13px;">Membros Cadastrados:</h4>
-                <ul class="team-list" id="teamList">
-                    <li>
-                        João Silva
-                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
-                    </li>
-                    <li>
-                        Maria Santos
-                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
-                    </li>
-                    <li>
-                        Pedro Costa
-                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
-                    </li>
-                    <li>
-                        Ana Silva
-                        <button class="delete-btn" onclick="deleteMember(this)">Remover</button>
-                    </li>
-                </ul>
-            </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Preenchido por JavaScript -->
         </div>
+      </div>
     </div>
 
-    <script src="js/calendar.js"></script>
+    <!-- SIDEBAR DIREITA -->
+    <div class="sidebar">
+      <!-- PRÓXIMAS ESCALAS -->
+      <div class="next-scales">
+        <h3>📅 Próximas Escalas</h3>
+        <div id="nextScalesList">
+          <div class="scale-card">
+            <div class="scale-date">17 de Julho</div>
+            <div class="scale-name">João Silva</div>
+            <div class="scale-type">Domingo Noite</div>
+          </div>
+          <div class="scale-card">
+            <div class="scale-date">20 de Julho</div>
+            <div class="scale-name">Maria Santos</div>
+            <div class="scale-type">Extra</div>
+          </div>
+          <div class="scale-card">
+            <div class="scale-date">24 de Julho</div>
+            <div class="scale-name">Pedro Costa</div>
+            <div class="scale-type">Domingo Manhã</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTATÍSTICAS -->
+      <div class="statistics">
+        <h3>📊 Participações no Mês</h3>
+        <div class="stat-item">
+          <span class="stat-name">João Silva</span>
+          <span class="stat-count">3</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-name">Maria Santos</span>
+          <span class="stat-count">2</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-name">Pedro Costa</span>
+          <span class="stat-count">4</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-name">Ana Oliveira</span>
+          <span class="stat-count">1</span>
+        </div>
+      </div>
+
+      <!-- AGENDA CULTO -->
+      <div class="agenda-culto">
+        <h3>➕ Adicionar Escala</h3>
+        <form id="agendaForm">
+          <div class="form-group">
+            <label for="agendaData">Data:</label>
+            <input type="date" id="agendaData" required>
+          </div>
+
+          <div class="form-group">
+            <label for="agendaTipo">Tipo de Agenda:</label>
+            <select id="agendaTipo" required>
+              <option value="">Selecione...</option>
+              <option value="Domingo Noite">Domingo Noite</option>
+              <option value="Domingo Manhã">Domingo Manhã</option>
+              <option value="Extra">Extra</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="agendaMembro">Membro da Equipe:</label>
+            <select id="agendaMembro" required>
+              <option value="">Selecione...</option>
+              <!-- Preenchido por JavaScript -->
+            </select>
+          </div>
+
+          <button type="submit" class="btn-add">➕ Adicionar</button>
+        </form>
+      </div>
+
+      <!-- EQUIPE -->
+      <div class="team">
+        <h3>👥 Equipe</h3>
+        <form id="teamForm">
+          <div class="form-group">
+            <input type="text" id="teamName" placeholder="Nome do membro" required>
+          </div>
+          <button type="submit" class="btn-add">➕ Adicionar Membro</button>
+        </form>
+        <ul class="team-list" id="teamList">
+          <li>
+            João Silva
+            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Maria Santos
+            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Pedro Costa
+            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+          </li>
+          <li>
+            Ana Oliveira
+            <button class="delete-btn" onclick="deleteMember(this)">❌</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
