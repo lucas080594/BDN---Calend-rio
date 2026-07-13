@@ -434,7 +434,7 @@ header p {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;
-  color: #000000;
+  color: #ffffff;
   font-size: 12px;
   font-family: inherit;
   transition: all 0.3s ease;
@@ -487,6 +487,21 @@ header p {
 
 .btn-salvar:active {
   transform: translateY(0);
+}
+
+.form-group select {
+  background-color: #1a1f3a !important;
+  color: #ffffff !important;
+}
+
+.form-group select option {
+  background-color: #1a1f3a;
+  color: #ffffff;
+}
+
+.form-group select option:checked {
+  background: linear-gradient(#4a9eff, #4a9eff);
+  background-color: #4a9eff !important;
 }
 
 /* ===== EQUIPE ===== */
