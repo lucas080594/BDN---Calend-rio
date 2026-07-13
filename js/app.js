@@ -2,21 +2,20 @@
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let scales = {};
-let teamMembers = [];
+let teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Oliveira'];
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 Aplicação iniciada');
-  
-  loadTeamMembers();
+  console.log('Página carregada');
   renderCalendar();
+  updateTeamSelect();
   
-  // Event Listeners - SETAS DO CALENDÁRIO
+  // Event Listeners para navegação de mês
   const prevBtn = document.getElementById('prevMonth');
   const nextBtn = document.getElementById('nextMonth');
   
   if (prevBtn) {
-    prevBtn.addEventListener('click', (e) => {
+    prevBtn.addEventListener('click', function(e) {
       e.preventDefault();
       currentMonth--;
       if (currentMonth < 0) {
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', (e) => {
+    nextBtn.addEventListener('click', function(e) {
       e.preventDefault();
       currentMonth++;
       if (currentMonth > 11) {
@@ -39,54 +38,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Formulários
+  // Event Listener para formulário de agenda
   const agendaForm = document.getElementById('agendaForm');
-  const teamForm = document.getElementById('teamForm');
-  
   if (agendaForm) {
     agendaForm.addEventListener('submit', addScale);
   }
-  
+
+  // Event Listener para formulário de equipe
+  const teamForm = document.getElementById('teamForm');
   if (teamForm) {
     teamForm.addEventListener('submit', addTeamMember);
   }
 });
-
-// ===== CARREGAR MEMBROS DO FIREBASE =====
-async function loadTeamMembers() {
-  try {
-    const snapshot = await db.collection('team').get();
-    teamMembers = [];
-    
-    snapshot.forEach(doc => {
-      teamMembers.push(doc.data().name);
-    });
-    
-    updateTeamSelect();
-    renderTeamList();
-    console.log('✅ Membros carregados:', teamMembers);
-  } catch (error) {
-    console.error('❌ Erro ao carregar membros:', error);
-  }
-}
-
-// ===== CARREGAR ESCALAS DO FIREBASE =====
-async function loadScales() {
-  try {
-    const snapshot = await db.collection('scales').get();
-    scales = {};
-    
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      scales[data.date] = data.members || [];
-    });
-    
-    renderCalendar();
-    console.log('✅ Escalas carregadas:', scales);
-  } catch (error) {
-    console.error('❌ Erro ao carregar escalas:', error);
-  }
-}
 
 // ===== RENDERIZAR CALENDÁRIO =====
 function renderCalendar() {
@@ -99,9 +62,10 @@ function renderCalendar() {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
 
+  // Atualizar título do mês
   const monthYearElement = document.getElementById('monthYear');
   if (monthYearElement) {
-    monthYearElement.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    monthYearElement.textContent = `${monthNames[currentMonth]} de ${currentYear}`;
   }
 
   const calendarGrid = document.getElementById('calendarGrid');
@@ -143,25 +107,15 @@ function createDayElement(day, isOtherMonth) {
   const dayContent = document.createElement('div');
   dayContent.className = 'day-content';
 
-  // Formatar data
-  const month = String(currentMonth + 1).padStart(2, '0');
-  const dayStr = String(day).padStart(2, '0');
-  const dateKey = `${currentYear}-${month}-${dayStr}`;
-
-  // Exibir escalas
-  if (scales[dateKey] && scales[dateKey].length > 0) {
+  // Buscar escalas para este dia
+  const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  if (scales[dateKey]) {
     scales[dateKey].forEach(scale => {
       const scaleDiv = document.createElement('div');
       scaleDiv.className = scale === 'VAGO' ? 'vago' : 'team-member';
       scaleDiv.textContent = scale;
       dayContent.appendChild(scaleDiv);
     });
-  } else if (!isOtherMonth) {
-    // Se não tem escala, mostrar "VAGO"
-    const vagoDiv = document.createElement('div');
-    vagoDiv.className = 'vago';
-    vagoDiv.textContent = 'VAGO';
-    dayContent.appendChild(vagoDiv);
   }
 
   dayElement.appendChild(dayNumber);
@@ -171,7 +125,7 @@ function createDayElement(day, isOtherMonth) {
 }
 
 // ===== ADICIONAR ESCALA =====
-async function addScale(e) {
+function addScale(e) {
   e.preventDefault();
 
   const dataInput = document.getElementById('agendaData').value;
@@ -179,114 +133,75 @@ async function addScale(e) {
   const membro = document.getElementById('agendaMembro').value;
 
   if (!dataInput || !tipo || !membro) {
-    alert('⚠️ Preencha todos os campos!');
+    alert('Preencha todos os campos!');
     return;
   }
 
-  try {
-    // Salvar no Firebase
-    await db.collection('scales').doc(dataInput).set({
-      date: dataInput,
-      members: [membro],
-      type: tipo,
-      timestamp: new Date()
-    }, { merge: true });
+  // Converter data de YYYY-MM-DD para formato interno
+  const dateKey = dataInput; // Já está em YYYY-MM-DD
 
-    console.log('✅ Escala salva no Firebase:', { dataInput, membro, tipo });
-
-    // Atualizar local
-    if (!scales[dataInput]) {
-      scales[dataInput] = [];
-    }
-    scales[dataInput].push(membro);
-
-    // Limpar formulário
-    document.getElementById('agendaForm').reset();
-
-    // Atualizar calendário
-    renderCalendar();
-
-    alert('✅ Escala adicionada com sucesso!');
-  } catch (error) {
-    console.error('❌ Erro ao salvar escala:', error);
-    alert('❌ Erro ao salvar escala!');
+  if (!scales[dateKey]) {
+    scales[dateKey] = [];
   }
+
+  scales[dateKey].push(membro);
+
+  document.getElementById('agendaForm').reset();
+  renderCalendar();
+
+  alert('✅ Escala adicionada com sucesso!');
 }
 
 // ===== ADICIONAR MEMBRO DA EQUIPE =====
-async function addTeamMember(e) {
+function addTeamMember(e) {
   e.preventDefault();
 
   const name = document.getElementById('teamName').value.trim();
 
   if (!name) {
-    alert('⚠️ Digite um nome!');
+    alert('Digite um nome!');
     return;
   }
 
   if (teamMembers.includes(name)) {
-    alert('⚠️ Este membro já existe!');
+    alert('Este membro já existe!');
     return;
   }
 
-  try {
-    // Salvar no Firebase
-    await db.collection('team').add({
-      name: name,
-      timestamp: new Date()
-    });
+  teamMembers.push(name);
 
-    console.log('✅ Membro salvo no Firebase:', name);
+  // Atualizar lista visual
+  const teamList = document.getElementById('teamList');
+  const li = document.createElement('li');
+  li.innerHTML = `
+    ${name}
+    <button class="delete-btn" type="button" onclick="deleteMember(this)">❌</button>
+  `;
+  teamList.appendChild(li);
 
-    teamMembers.push(name);
+  // Limpar formulário
+  document.getElementById('teamName').value = '';
 
-    // Limpar formulário
-    document.getElementById('teamName').value = '';
-
-    // Atualizar UI
-    updateTeamSelect();
-    renderTeamList();
-
-    alert('✅ Membro adicionado com sucesso!');
-  } catch (error) {
-    console.error('❌ Erro ao salvar membro:', error);
-    alert('❌ Erro ao salvar membro!');
-  }
+  // Atualizar select
+  updateTeamSelect();
 }
 
 // ===== DELETAR MEMBRO =====
-async function deleteMember(button) {
+function deleteMember(button) {
   const li = button.parentElement;
   const name = li.textContent.replace('❌', '').trim();
 
-  if (!confirm(`Deseja deletar ${name}?`)) {
-    return;
-  }
+  teamMembers = teamMembers.filter(m => m !== name);
+  li.remove();
 
-  try {
-    // Deletar do Firebase
-    const snapshot = await db.collection('team').where('name', '==', name).get();
-    snapshot.forEach(doc => {
-      doc.ref.delete();
-    });
-
-    console.log('✅ Membro deletado do Firebase:', name);
-
-    teamMembers = teamMembers.filter(m => m !== name);
-    li.remove();
-
-    updateTeamSelect();
-  } catch (error) {
-    console.error('❌ Erro ao deletar membro:', error);
-    alert('❌ Erro ao deletar membro!');
-  }
+  updateTeamSelect();
 }
 
 // ===== ATUALIZAR SELECT DE MEMBROS =====
 function updateTeamSelect() {
   const select = document.getElementById('agendaMembro');
   if (!select) return;
-
+  
   select.innerHTML = '<option value="">Selecionar Membro...</option>';
 
   teamMembers.forEach(member => {
@@ -296,26 +211,3 @@ function updateTeamSelect() {
     select.appendChild(option);
   });
 }
-
-// ===== RENDERIZAR LISTA DE EQUIPE =====
-function renderTeamList() {
-  const teamList = document.getElementById('teamList');
-  if (!teamList) return;
-
-  teamList.innerHTML = '';
-
-  teamMembers.forEach(member => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      ${member}
-      <button class="delete-btn" onclick="deleteMember(this)">❌</button>
-    `;
-    teamList.appendChild(li);
-  });
-}
-
-// ===== CARREGAR DADOS AO INICIAR =====
-window.addEventListener('load', () => {
-  loadTeamMembers();
-  loadScales();
-});
