@@ -9,7 +9,13 @@
 <body>
   <!-- HEADER -->
   <header>
-    <h1>🎙️ MINISTÉRIO DE ÁUDIO - BOLA DE NEVE SOROCABA</h1>
+    <div class="header-left">
+      <div>
+        <h1>MINISTÉRIO DE ÁUDIO</h1>
+        <p>BOLA DE NEVE SOROCABA</p>
+      </div>
+    </div>
+    <div class="painel-ativo">PAINEL DE CONTROLE ATIVO</div>
   </header>
 
   <!-- CONTAINER PRINCIPAL -->
@@ -18,24 +24,50 @@
     <div class="main-content">
       <!-- CONTROLE DO MÊS -->
       <div class="month-control">
-        <button id="prevMonth">← Anterior</button>
-        <h2 id="monthYear">Julho 2026</h2>
-        <button id="nextMonth">Próximo →</button>
+        <button id="prevMonth">◀</button>
+        <h2 id="monthYear">julho de 2026</h2>
+        <button class="today-btn">today</button>
+        <button id="nextMonth">▶</button>
       </div>
 
       <!-- CALENDÁRIO -->
       <div class="calendar">
         <div class="calendar-header">
-          <div class="day-name">Dom</div>
-          <div class="day-name">Seg</div>
-          <div class="day-name">Ter</div>
-          <div class="day-name">Qua</div>
-          <div class="day-name">Qui</div>
-          <div class="day-name">Sex</div>
-          <div class="day-name">Sab</div>
+          <div class="day-name">dom.</div>
+          <div class="day-name">seg.</div>
+          <div class="day-name">ter.</div>
+          <div class="day-name">qua.</div>
+          <div class="day-name">qui.</div>
+          <div class="day-name">sex.</div>
+          <div class="day-name">sáb.</div>
         </div>
         <div class="calendar-grid" id="calendarGrid">
           <!-- Preenchido por JavaScript -->
+        </div>
+      </div>
+
+      <!-- PARTICIPAÇÕES NO MÊS -->
+      <div class="statistics">
+        <h3>📊 Participações no Mês</h3>
+        <div class="stat-card">
+          <div class="stat-name">Lucas</div>
+          <div class="stat-count">7</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Vitor</div>
+          <div class="stat-count">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Cauan</div>
+          <div class="stat-count">2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Carlinhos</div>
+          <div class="stat-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-name">Clovis</div>
+          <div class="stat-count">0</div>
         </div>
       </div>
     </div>
@@ -45,59 +77,55 @@
       <!-- PRÓXIMAS ESCALAS -->
       <div class="next-scales">
         <h3>📅 Próximas Escalas</h3>
-        <div id="nextScalesList">
+        <div class="next-scales-list" id="nextScalesList">
           <div class="scale-card">
-            <div class="scale-date">17 de Julho</div>
-            <div class="scale-name">João Silva</div>
-            <div class="scale-type">Domingo Noite</div>
+            <div class="scale-date">19/07/2026 - DOMINGO MANHÃ</div>
+            <div class="scale-name">Cauan</div>
+            <div class="scale-actions">
+              <button class="edit-btn">EDIT</button>
+              <button class="delete-btn">❌</button>
+            </div>
           </div>
           <div class="scale-card">
-            <div class="scale-date">20 de Julho</div>
-            <div class="scale-name">Maria Santos</div>
-            <div class="scale-type">Extra</div>
+            <div class="scale-date">23/07/2026 - QUINTA</div>
+            <div class="scale-name">Cauan</div>
+            <div class="scale-actions">
+              <button class="edit-btn">EDIT</button>
+              <button class="delete-btn">❌</button>
+            </div>
           </div>
           <div class="scale-card">
-            <div class="scale-date">24 de Julho</div>
-            <div class="scale-name">Pedro Costa</div>
-            <div class="scale-type">Domingo Manhã</div>
+            <div class="scale-date">28/07/2026 - DOMINGO NOITE</div>
+            <div class="scale-name">Lucas</div>
+            <div class="scale-actions">
+              <button class="edit-btn">EDIT</button>
+              <button class="delete-btn">❌</button>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- ESTATÍSTICAS -->
-      <div class="statistics">
-        <h3>📊 Participações no Mês</h3>
-        <div class="stat-item">
-          <span class="stat-name">João Silva</span>
-          <span class="stat-count">3</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-name">Maria Santos</span>
-          <span class="stat-count">2</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-name">Pedro Costa</span>
-          <span class="stat-count">4</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-name">Ana Oliveira</span>
-          <span class="stat-count">1</span>
+          <div class="scale-card">
+            <div class="scale-date">28/07/2026 - DOMINGO MANHÃ</div>
+            <div class="scale-name">VAGO</div>
+            <div class="scale-actions">
+              <button class="edit-btn">EDIT</button>
+              <button class="delete-btn">❌</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- AGENDA CULTO -->
       <div class="agenda-culto">
-        <h3>➕ Adicionar Escala</h3>
+        <h3>➕ Agendar Culto</h3>
         <form id="agendaForm">
           <div class="form-group">
-            <label for="agendaData">Data:</label>
-            <input type="date" id="agendaData" required>
+            <label for="agendaData">dd/mm/aaaa</label>
+            <input type="text" id="agendaData" placeholder="dd/mm/aaaa" required>
           </div>
 
           <div class="form-group">
-            <label for="agendaTipo">Tipo de Agenda:</label>
+            <label for="agendaTipo">Tipo</label>
             <select id="agendaTipo" required>
-              <option value="">Selecione...</option>
+              <option value="">Quinta</option>
               <option value="Domingo Noite">Domingo Noite</option>
               <option value="Domingo Manhã">Domingo Manhã</option>
               <option value="Extra">Extra</option>
@@ -105,41 +133,39 @@
           </div>
 
           <div class="form-group">
-            <label for="agendaMembro">Membro da Equipe:</label>
+            <label for="agendaMembro">Selecionar Membro...</label>
             <select id="agendaMembro" required>
-              <option value="">Selecione...</option>
+              <option value="">Selecionar Membro...</option>
               <!-- Preenchido por JavaScript -->
             </select>
           </div>
 
-          <button type="submit" class="btn-add">➕ Adicionar</button>
+          <button type="submit" class="btn-salvar">Salvar Escala</button>
         </form>
       </div>
 
       <!-- EQUIPE -->
       <div class="team">
         <h3>👥 Equipe</h3>
-        <form id="teamForm">
-          <div class="form-group">
-            <input type="text" id="teamName" placeholder="Nome do membro" required>
-          </div>
-          <button type="submit" class="btn-add">➕ Adicionar Membro</button>
-        </form>
+        <div class="team-form">
+          <input type="text" id="teamName" placeholder="Adicionar membro...">
+          <button type="button" class="btn-add-member" onclick="addTeamMember()">ADD</button>
+        </div>
         <ul class="team-list" id="teamList">
           <li>
-            João Silva
+            Vitor
             <button class="delete-btn" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
-            Maria Santos
+            Cauan
             <button class="delete-btn" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
-            Pedro Costa
+            Carlinhos
             <button class="delete-btn" onclick="deleteMember(this)">❌</button>
           </li>
           <li>
-            Ana Oliveira
+            Clovis
             <button class="delete-btn" onclick="deleteMember(this)">❌</button>
           </li>
         </ul>
@@ -147,6 +173,6 @@
     </div>
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -2,14 +2,13 @@
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 let scales = {};
-let teamMembers = ['João Silva', 'Maria Santos', 'Pedro Costa', 'Ana Oliveira'];
+let teamMembers = ['Lucas', 'Vitor', 'Cauan', 'Carlinhos', 'Clovis'];
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
   renderCalendar();
   updateTeamSelect();
   
-  // Event Listeners
   document.getElementById('prevMonth').addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) {
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   document.getElementById('agendaForm').addEventListener('submit', addScale);
-  document.getElementById('teamForm').addEventListener('submit', addTeamMember);
 });
 
 // ===== RENDERIZAR CALENDÁRIO =====
@@ -39,11 +37,11 @@ function renderCalendar() {
   const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
   
   const monthNames = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
   ];
 
-  document.getElementById('monthYear').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+  document.getElementById('monthYear').textContent = `${monthNames[currentMonth]} de ${currentYear}`;
 
   const calendarGrid = document.getElementById('calendarGrid');
   calendarGrid.innerHTML = '';
@@ -116,21 +114,16 @@ function addScale(e) {
     scales[data] = [];
   }
 
-  scales[data].push(`${membro} (${tipo})`);
+  scales[data].push(membro);
 
-  // Limpar formulário
   document.getElementById('agendaForm').reset();
-
-  // Atualizar calendário
   renderCalendar();
 
   alert('Escala adicionada com sucesso!');
 }
 
 // ===== ADICIONAR MEMBRO DA EQUIPE =====
-function addTeamMember(e) {
-  e.preventDefault();
-
+function addTeamMember() {
   const name = document.getElementById('teamName').value.trim();
 
   if (!name) {
@@ -145,7 +138,6 @@ function addTeamMember(e) {
 
   teamMembers.push(name);
 
-  // Atualizar lista visual
   const teamList = document.getElementById('teamList');
   const li = document.createElement('li');
   li.innerHTML = `
@@ -154,10 +146,7 @@ function addTeamMember(e) {
   `;
   teamList.appendChild(li);
 
-  // Limpar formulário
   document.getElementById('teamName').value = '';
-
-  // Atualizar select
   updateTeamSelect();
 }
 
@@ -175,7 +164,7 @@ function deleteMember(button) {
 // ===== ATUALIZAR SELECT DE MEMBROS =====
 function updateTeamSelect() {
   const select = document.getElementById('agendaMembro');
-  select.innerHTML = '<option value="">Selecione...</option>';
+  select.innerHTML = '<option value="">Selecionar Membro...</option>';
 
   teamMembers.forEach(member => {
     const option = document.createElement('option');
